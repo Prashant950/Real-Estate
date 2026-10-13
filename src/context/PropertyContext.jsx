@@ -125,9 +125,19 @@ export function PropertyProvider({ children }) {
 
       // Category check
       if (selectedCategory && selectedCategory !== 'All' && selectedCategory !== 'all') {
+        const sc = selectedCategory.toLowerCase()
+        const pCat = p.category.toLowerCase()
+        const pType = p.type.toLowerCase()
         const matchesCategory =
-          p.category.toLowerCase().includes(selectedCategory.toLowerCase()) ||
-          p.type.toLowerCase().includes(selectedCategory.toLowerCase())
+          pCat.includes(sc) ||
+          pType.includes(sc) ||
+          sc.includes(pCat) ||
+          (sc.includes('bungalow') && (pCat.includes('bungalow') || pCat.includes('villa') || pType.includes('villa'))) ||
+          (sc.includes('villa') && (pCat.includes('villa') || pType.includes('villa'))) ||
+          (sc.includes('house') && (pCat.includes('house') || pCat.includes('villa'))) ||
+          (sc.includes('floor') && (pCat.includes('floor') || pType.includes('floor'))) ||
+          (sc.includes('apartment') && (pCat.includes('apartment') || pType.includes('penthouse'))) ||
+          (sc.includes('commercial') && (pCat.includes('commercial') || pType.includes('sco') || pType.includes('retail')))
         if (!matchesCategory) return false
       }
 

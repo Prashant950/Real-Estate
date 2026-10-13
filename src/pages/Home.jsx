@@ -1,10 +1,10 @@
+import { useState } from 'react'
 import { Link, useNavigate } from 'react-router-dom'
 import Hero from '../components/Hero'
-import { Arrow } from '../components/Icons'
+import { Arrow, WhatsAppIcon } from '../components/Icons'
 import Reveal from '../components/Reveal'
 import { useProperties } from '../context/PropertyContext'
-import { ASSET_CATEGORIES, BUILDER_BENEFITS } from '../data/properties'
-import { company, offices } from '../data/site'
+import { ASSET_CATEGORIES } from '../data/properties'
 import usePageMeta from '../hooks/usePageMeta'
 
 export default function Home() {
@@ -14,7 +14,69 @@ export default function Home() {
   )
 
   const navigate = useNavigate()
-  const { setSelectedCategory, setIsAddModalOpen } = useProperties()
+  const { setSelectedCategory, notify } = useProperties()
+
+  const [contactForm, setContactForm] = useState({
+    name: '',
+    phone: '',
+    email: '',
+    service: 'Sale & Purchase of Properties',
+    budget: '₹3 - 5 Cr',
+    location: 'DLF Phase 1 & 2, Gurugram',
+    message: '',
+  })
+  const [isSubmitting, setIsSubmitting] = useState(false)
+
+  const handleContactSubmit = async (e) => {
+    e.preventDefault()
+    if (!contactForm.name.trim() || !contactForm.phone.trim()) {
+      notify('Please provide your Name and Phone Number.')
+      return
+    }
+
+    setIsSubmitting(true)
+    const payload = {
+      name: contactForm.name.trim(),
+      phone: contactForm.phone.trim(),
+      email: contactForm.email.trim(),
+      service: contactForm.service,
+      budget: contactForm.budget,
+      location: contactForm.location,
+      message: contactForm.message.trim(),
+      source: 'Home Page Direct Advisory Form',
+      createdAt: new Date().toISOString(),
+    }
+
+    try {
+      await fetch('/api/inquiries', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      })
+    } catch {
+      // ignore
+    }
+
+    try {
+      const stored = JSON.parse(localStorage.getItem('res_inquiries') || '[]')
+      stored.unshift({ id: `inq-${Date.now()}`, ...payload })
+      localStorage.setItem('res_inquiries', JSON.stringify(stored))
+    } catch {
+      // ignore
+    }
+
+    setIsSubmitting(false)
+    notify('Thank you! Your enquiry has been received. Our senior advisor will contact you shortly.')
+    setContactForm({
+      name: '',
+      phone: '',
+      email: '',
+      service: 'Sale & Purchase of Properties',
+      budget: '₹3 - 5 Cr',
+      location: 'DLF Phase 1 & 2, Gurugram',
+      message: '',
+    })
+  }
 
   const handleCategoryClick = (catTitle) => {
     setSelectedCategory(catTitle)
@@ -26,9 +88,68 @@ export default function Home() {
       {/* 1. Hero with Live Search & Filter Bar */}
       <Hero />
 
-      {/* Section 2: Thorough Leadership in Sales, Purchase & Turnkey Development */}
-      <section className="section bg-ivory pt-16 md:pt-24 lg:pt-28">
-        <div className="wrap grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
+      {/* Section 2: Distinct Asset Classes Handled with Authority */}
+      <section id="asset-classes" className="bg-[#f5f0e6] py-8 md:py-12 scroll-mt-20">
+        <div className="wrap">
+          <Reveal className="mb-8 border-b border-ink/10 pb-5">
+            <span className="kicker">Core Specialization</span>
+            <h2 className="h2 !mb-1 text-ink">Distinct Asset Classes Handled with Authority</h2>
+            <p className="text-sm text-stone max-w-[60ch]">
+              Curated portfolio segments managed with specialized legal and structural advisory.
+            </p>
+          </Reveal>
+
+          {/* 4 Cards Grid matching screenshot */}
+          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4 items-stretch">
+            {ASSET_CATEGORIES.filter((c) => c.id !== 'all').map((cat, idx) => (
+              <Reveal key={cat.title} delay={idx * 80} className="h-full flex flex-col">
+                <div
+                  onClick={() => handleCategoryClick(cat.title)}
+                  className="group relative flex flex-col h-full overflow-hidden rounded-xl bg-ink text-white shadow-lg cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
+                >
+                  <div className="relative aspect-[4/5] overflow-hidden shrink-0">
+                    <img
+                      src={cat.image}
+                      alt={cat.title}
+                      loading="lazy"
+                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
+                    />
+                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
+                    <span className="absolute top-4 left-4 rounded bg-bronze px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-white shadow">
+                      {cat.badge}
+                    </span>
+                  </div>
+
+                  <div className="p-6 flex flex-1 flex-col justify-between">
+                    <div>
+                      <h3 className="font-serif text-2xl font-bold leading-snug mb-2 group-hover:text-bronze-l transition-colors">
+                        {cat.title}
+                      </h3>
+                      <p className="text-xs text-[#d3cbbe] line-clamp-2 mb-4 leading-relaxed">
+                        {cat.description}
+                      </p>
+                    </div>
+                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-bronze-l group-hover:underline mt-auto pt-2">
+                      Explore Listings →
+                    </span>
+                  </div>
+                </div>
+              </Reveal>
+            ))}
+          </div>
+
+          {/* Action: View All Properties button below cards */}
+          <Reveal className="mt-8 text-center">
+            <Link to="/properties" className="btn btn-dark text-xs">
+              View All Properties <Arrow />
+            </Link>
+          </Reveal>
+        </div>
+      </section>
+
+      {/* Section 3: Thorough Leadership in Sales, Purchase & Turnkey Development */}
+      <section className="bg-ivory py-8 md:py-10">
+        <div className="wrap grid items-center gap-10 lg:grid-cols-2 lg:gap-16">
           {/* Left: HD Luxury Villa with Dual Floating Badges & Gold Architectural Frame */}
           <Reveal className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl group border border-ink/10">
@@ -74,12 +195,12 @@ export default function Home() {
               <strong className="text-bronze-d font-bold">Real Estate Square</strong> is an established market leader in sale, purchase, leasing, turnkey construction and corporate collaborations across Gurugram and Delhi NCR.
             </p>
 
-            <p className="mb-7 text-stone text-xs sm:text-sm md:text-base leading-relaxed">
+            <p className="mb-6 text-stone text-xs sm:text-sm md:text-base leading-relaxed">
               We provide total property management, comprehensive legal documentation assistance, portfolio restructuring and authoritative valuations. With deep proprietary intelligence on transaction histories, we protect your capital and maximize returns.
             </p>
 
             {/* 3 Refined Feature Pillars with Gold Linear SVGs */}
-            <div className="grid gap-3.5 sm:grid-cols-3 mb-8">
+            <div className="grid gap-3.5 sm:grid-cols-3">
               {/* Pillar 1 */}
               <div className="group rounded-xl border border-ink/10 bg-white p-4.5 shadow-sm transition-all duration-300 hover:border-bronze hover:shadow-md hover:-translate-y-1">
                 <div className="mb-3 flex h-10 w-10 items-center justify-center rounded-lg bg-bronze/10 text-bronze transition-colors group-hover:bg-bronze group-hover:text-white">
@@ -136,65 +257,10 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 3: Distinct Asset Classes Handled with Authority */}
-      <section id="asset-classes" className="section bg-[#f5f0e6] scroll-mt-20">
-        <div className="wrap">
-          <Reveal className="mb-12 flex flex-wrap items-end justify-between gap-6 border-b border-ink/10 pb-6">
-            <div>
-              <span className="kicker">Core Specialization</span>
-              <h2 className="h2 !mb-1 text-ink">Distinct Asset Classes Handled with Authority</h2>
-              <p className="text-sm text-stone max-w-[60ch]">
-                Curated portfolio segments managed with specialized legal and structural advisory.
-              </p>
-            </div>
-            <Link to="/properties" className="btn btn-dark text-xs">
-              View All Properties <Arrow />
-            </Link>
-          </Reveal>
-
-          {/* 4 Cards Grid matching screenshot */}
-          <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
-            {ASSET_CATEGORIES.filter((c) => c.id !== 'all').map((cat, idx) => (
-              <Reveal key={cat.title} delay={idx * 80}>
-                <div
-                  onClick={() => handleCategoryClick(cat.title)}
-                  className="group relative flex flex-col overflow-hidden rounded-xl bg-ink text-white shadow-lg cursor-pointer transition-all duration-500 hover:-translate-y-2 hover:shadow-2xl"
-                >
-                  <div className="relative aspect-[4/5] overflow-hidden">
-                    <img
-                      src={cat.image}
-                      alt={cat.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
-                    <span className="absolute top-4 left-4 rounded bg-bronze px-2.5 py-1 text-[10px] font-extrabold uppercase tracking-widest text-white shadow">
-                      {cat.badge}
-                    </span>
-                  </div>
-
-                  <div className="p-6">
-                    <h3 className="font-serif text-2xl font-bold leading-snug mb-2 group-hover:text-bronze-l transition-colors">
-                      {cat.title}
-                    </h3>
-                    <p className="text-xs text-[#d3cbbe] line-clamp-2 mb-4 leading-relaxed">
-                      {cat.description}
-                    </p>
-                    <span className="inline-flex items-center gap-2 text-xs font-bold uppercase tracking-wider text-bronze-l group-hover:underline">
-                      Explore Listings →
-                    </span>
-                  </div>
-                </div>
-              </Reveal>
-            ))}
-          </div>
-        </div>
-      </section>
-
       {/* Section 4: Our Specialized Services */}
-      <section id="services" className="section bg-white scroll-mt-20">
+      <section id="services" className="bg-white py-8 md:py-12 scroll-mt-20">
         <div className="wrap">
-          <Reveal className="mb-12 text-center max-w-2xl mx-auto">
+          <Reveal className="mb-7 text-center max-w-2xl mx-auto">
             <span className="kicker">Unmatched Capabilities</span>
             <h2 className="h2 !mb-3 text-ink">Our Specialized Services</h2>
             <p className="text-stone text-sm leading-relaxed">
@@ -253,87 +319,16 @@ export default function Home() {
                     ))}
                   </ul>
                 </div>
-
-                <Link
-                  to="/contact#enquiry"
-                  className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-bronze-d hover:text-ink transition-colors"
-                >
-                  <span>Learn More</span>
-                  <Arrow className="h-3 w-3" />
-                </Link>
               </Reveal>
             ))}
           </div>
         </div>
       </section>
 
-      {/* Section 5: Assuring Best Properties Across All Budgets */}
-      <section className="section bg-[#f5f1ea]">
-        <div className="wrap grid items-center gap-12 lg:grid-cols-2 lg:gap-20">
-          <Reveal>
-            <span className="kicker">Tailored Acquisition</span>
-            <h2 className="h2 !mb-4 text-ink">
-              Assuring Best Properties Across All Budgets
-            </h2>
-            <p className="mb-4 text-base md:text-lg text-stone leading-relaxed">
-              Whether you are an astute investor seeking high rental yields or a family looking for your forever residence in Delhi NCR, our extensive portfolio provides verified options across every tier.
-            </p>
-            <p className="mb-4 text-stone text-sm md:text-base leading-relaxed">
-              From contemporary 3 BHK builder floors in emerging sectors to sprawling presidential penthouses on Golf Course Road, we conduct unbiased comparative analysis so you never overpay.
-            </p>
-            <p className="mb-6 text-stone text-sm md:text-base leading-relaxed">
-              We take the <strong className="text-ink">quality of our customer service extremely seriously</strong> and strive to make your acquisition seamless, transparent, and legally sound.
-            </p>
-
-            <div className="rounded-lg border border-bronze/30 bg-white p-5 shadow-sm mb-7">
-              <div className="flex items-center gap-4">
-                <div className="flex -space-x-2">
-                  <span className="h-10 w-10 rounded-full border-2 border-white bg-bronze flex items-center justify-center text-white font-bold text-xs">
-                    4.9★
-                  </span>
-                </div>
-                <div>
-                  <h4 className="font-bold text-sm text-ink">Highest Client Trust Rating</h4>
-                  <p className="text-xs text-stone">Over ₹500 Cr+ transactional volume closed without a single title dispute.</p>
-                </div>
-              </div>
-            </div>
-
-            <Link to="/projects" className="btn btn-dark text-xs">
-              Search All Budgets <Arrow />
-            </Link>
-          </Reveal>
-
-          {/* Right: Panoramic Living Room with Mountain/City View */}
-          <Reveal className="relative">
-            <div className="relative overflow-hidden rounded-xl shadow-2xl group">
-              <img
-                src="https://images.unsplash.com/photo-1512917774080-9991f1c4c750?auto=format&fit=crop&w=1600&q=90"
-                alt="Presidential Suites & Luxury Apartments"
-                loading="lazy"
-                className="w-full aspect-[4/3] object-cover transition-transform duration-1000 group-hover:scale-105"
-              />
-              <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-black/20 to-transparent" />
-
-              {/* Floating Headline Card on image matching screenshot */}
-              <div className="absolute bottom-6 inset-x-6 rounded-lg bg-black/80 p-4 backdrop-blur-md border border-white/20 text-white">
-                <span className="text-[10px] font-bold uppercase tracking-widest text-bronze-l block mb-0.5">
-                  EXCLUSIVE SELECTION
-                </span>
-                <h4 className="font-serif text-xl font-bold leading-tight">
-                  Presidential Suites &amp; Luxury Apartments
-                </h4>
-                <p className="text-xs text-[#d3cbbe] mt-1">
-                  Floor-to-ceiling panoramic views, private elevators &amp; 5-star concierge services.
-                </p>
-              </div>
-            </div>
-          </Reveal>
-        </div>
-      </section>
+     
 
       {/* Section 6: Dark Gold Stats Banner ("Years of Excellence In Delhi NCR") */}
-      <section className="relative isolate overflow-hidden bg-[#121110] py-20 text-white md:py-28">
+      <section className="relative isolate overflow-hidden bg-[#121110] py-12 text-white md:py-16">
         <div
           className="absolute inset-0 -z-20 bg-cover bg-center opacity-20"
           style={{ backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80')` }}
@@ -341,7 +336,7 @@ export default function Home() {
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#121110] via-[#121110]/90 to-[#121110]/70" />
 
         <div className="wrap">
-          <div className="mb-14 max-w-3xl">
+          <div className="mb-8 max-w-3xl">
             <span className="kicker !text-bronze-l">Legacy of Integrity</span>
             <h2 className="h2 text-white !mb-4">Years of Excellence In Delhi NCR</h2>
             <p className="font-serif text-xl md:text-2xl leading-relaxed text-[#ded8cb]">
@@ -350,7 +345,7 @@ export default function Home() {
           </div>
 
           {/* 4 Big Metrics Grid */}
-          <div className="grid grid-cols-2 gap-8 border-t border-white/15 pt-10 sm:grid-cols-4">
+          <div className="grid grid-cols-2 gap-6 border-t border-white/15 pt-8 sm:grid-cols-4">
             <div>
               <span className="font-serif text-4xl md:text-5xl font-bold text-bronze-l block mb-1">
                 ₹500+ Cr
@@ -383,41 +378,289 @@ export default function Home() {
         </div>
       </section>
 
-      {/* Section 8: Benefits of New Builders Homes */}
-      <section className="section bg-[#f5f1ea]">
+      {/* Section 8: Direct Office Address & Quick Advisory Contact Form */}
+      <section id="contact-advisory" className="bg-[#f8f5ef] py-10 md:py-14 scroll-mt-20 border-t border-ink/5">
         <div className="wrap">
-          <Reveal className="mb-10 text-center max-w-2xl mx-auto">
-            <span className="kicker">Finishing Standards</span>
-            <h2 className="h2 !mb-2 text-ink">Benefits of New Builders Homes</h2>
-            <p className="text-xs md:text-sm text-stone">
-              Every newly constructed floor incorporates premier international fittings and sustainable smart-home amenities.
+          {/* Section Header */}
+          <Reveal className="mb-8 text-center max-w-2xl mx-auto">
+            <span className="kicker">Direct Advisory Desk</span>
+            <h2 className="h2 !mb-2 text-ink">Connect With Our Senior Partners</h2>
+            <p className="text-stone text-xs md:text-sm">
+              Personalized consultation for acquisitions, turnkey development, and institutional investments across Gurugram &amp; Delhi NCR.
             </p>
           </Reveal>
 
-          {/* 5 HD Gallery Cards matching screenshot */}
-          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 lg:grid-cols-5">
-            {BUILDER_BENEFITS.map((b, idx) => (
-              <Reveal key={b.title} delay={idx * 60}>
-                <div className="group overflow-hidden rounded-xl bg-white border border-ink/10 shadow-sm transition-all duration-500 hover:-translate-y-1.5 hover:shadow-xl">
-                  <div className="relative aspect-square overflow-hidden bg-sand">
-                    <img
-                      src={b.image}
-                      alt={b.title}
-                      loading="lazy"
-                      className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-110"
-                    />
-                    <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-transparent" />
-                    <span className="absolute bottom-2.5 left-2.5 right-2.5 text-xs font-serif font-bold text-white leading-tight">
-                      {b.title}
-                    </span>
+          {/* Responsive Layout:
+              - Mobile (< lg): Form is Order 1 (Top / First), Address is Order 2 (Down / Second)
+              - Laptop (lg:): Address is Order 1 (Left, 5 cols), Form is Order 2 (Right, 7 cols)
+          */}
+          <div className="grid gap-8 lg:grid-cols-12 lg:gap-10 items-stretch">
+            {/* Left side in Laptop / Down in Mobile: Address & Office Details */}
+            <div className="order-2 lg:order-1 lg:col-span-5 flex flex-col justify-between rounded-2xl border border-ink/10 bg-white p-6 sm:p-8 shadow-sm">
+              <div>
+                <div className="flex items-center gap-2 mb-4">
+                  <span className="h-2 w-2 rounded-full bg-bronze" />
+                  <span className="text-[11px] font-bold uppercase tracking-widest text-bronze-d">
+                    Registered Headquarters
+                  </span>
+                </div>
+
+                {/* Gurugram HQ Card */}
+                <div className="mb-5 rounded-xl border border-bronze/20 bg-ivory/60 p-4.5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-bronze-d block">
+                        MAIN ADVISORY DESK
+                      </span>
+                      <h4 className="font-serif text-lg font-bold text-ink">
+                        Gurugram Office
+                      </h4>
+                    </div>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=The+Shopping+Mall+Arjun+Marg+DLF+Phase+1+Gurugram"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded bg-sand/70 px-2 py-1 text-[11px] font-semibold text-ink hover:bg-bronze hover:text-white transition-colors"
+                    >
+                      <span>Map ↗</span>
+                    </a>
                   </div>
-                  <div className="p-3 text-[11px] text-stone">
-                    <p className="font-semibold text-ink mb-0.5">{b.sub}</p>
-                    <p className="line-clamp-2 text-stone/80 text-[10px]">{b.description}</p>
+                  <p className="text-xs text-stone leading-relaxed">
+                    O-107, 1st Floor, Shopping Mall, Arjun Marg, DLF Phase-1, Gurugram, Haryana - 122002 INDIA
+                  </p>
+                </div>
+
+                {/* Delhi Regional Branch Card */}
+                <div className="mb-5 rounded-xl border border-ink/10 bg-sand/30 p-4.5">
+                  <div className="flex items-start justify-between gap-2 mb-2">
+                    <div>
+                      <span className="text-[10px] font-extrabold uppercase tracking-widest text-stone block">
+                        REGIONAL BRANCH
+                      </span>
+                      <h4 className="font-serif text-lg font-bold text-ink">
+                        Delhi Office (Taneja Associates)
+                      </h4>
+                    </div>
+                    <a
+                      href="https://www.google.com/maps/search/?api=1&query=B-1/18A+Paschim+Vihar+New+Delhi+110063"
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="inline-flex items-center gap-1 rounded bg-white px-2 py-1 text-[11px] font-semibold text-ink hover:bg-bronze hover:text-white transition-colors border border-ink/10"
+                    >
+                      <span>Map ↗</span>
+                    </a>
+                  </div>
+                  <p className="text-xs text-stone leading-relaxed">
+                    B-1/18A, Paschim Vihar, New Delhi - 110063 INDIA
+                  </p>
+                </div>
+
+                {/* Direct Communications */}
+                <div className="space-y-3 pt-3 border-t border-ink/10">
+                  <div className="flex items-center gap-3 text-xs text-stone">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-bronze/10 text-bronze font-bold text-sm">
+                      📞
+                    </span>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-stone/80 block">Direct Telephones</span>
+                      <div className="flex items-center gap-2 font-semibold text-ink">
+                        <a href="tel:+918800006689" className="hover:text-bronze transition-colors">+91-8800006689</a>
+                        <span>·</span>
+                        <a href="tel:+918800006678" className="hover:text-bronze transition-colors">8800006678</a>
+                      </div>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-xs text-stone">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-bronze/10 text-bronze font-bold text-sm">
+                      ✉️
+                    </span>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-stone/80 block">Email Advisory</span>
+                      <a href="mailto:info@realestatesquare.in" className="font-semibold text-ink hover:text-bronze transition-colors">
+                        info@realestatesquare.in
+                      </a>
+                    </div>
+                  </div>
+
+                  <div className="flex items-center gap-3 text-xs text-stone">
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-lg bg-bronze/10 text-bronze font-bold text-sm">
+                      🕒
+                    </span>
+                    <div>
+                      <span className="text-[10px] uppercase font-bold text-stone/80 block">Advisory Hours</span>
+                      <span className="font-semibold text-ink">
+                        Mon – Sun: 9:30 AM to 7:30 PM
+                      </span>
+                    </div>
                   </div>
                 </div>
-              </Reveal>
-            ))}
+              </div>
+
+              {/* Instant WhatsApp Action */}
+              <a
+                href="https://wa.me/918800006689?text=Hello%2C%20I%20would%20like%20to%20enquire%20about%20properties%20in%20Delhi%20NCR."
+                target="_blank"
+                rel="noopener noreferrer"
+                className="mt-6 flex items-center justify-center gap-2 rounded-lg bg-[#25D366] px-4 py-3 text-xs font-bold uppercase tracking-wider text-white shadow-sm transition hover:bg-[#1ebd59]"
+              >
+                <WhatsAppIcon className="h-4 w-4" />
+                <span>Chat on WhatsApp Directly</span>
+              </a>
+            </div>
+
+            {/* Right side in Laptop / First in Mobile: Contact Form */}
+            <div className="order-1 lg:order-2 lg:col-span-7 rounded-2xl border border-ink/10 bg-white p-6 sm:p-8 shadow-sm">
+              <div className="mb-5 border-b border-ink/10 pb-4">
+                <span className="kicker !mb-1 text-bronze">Priority Inquiry</span>
+                <h3 className="font-serif text-2xl font-bold text-ink">
+                  Request Confidential Advisory
+                </h3>
+                <p className="text-xs text-stone mt-1">
+                  Share your requirements below. Our senior principal will personally connect with verified options.
+                </p>
+              </div>
+
+              <form onSubmit={handleContactSubmit} className="space-y-4">
+                {/* Row 1: Name & Phone */}
+                <div className="grid gap-3.5 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Your Name <span className="text-amber-600">*</span>
+                    </label>
+                    <input
+                      type="text"
+                      required
+                      placeholder="e.g. Vikram Malhotra"
+                      value={contactForm.name}
+                      onChange={(e) => setContactForm({ ...contactForm, name: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink placeholder:text-stone/50 focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Phone Number <span className="text-amber-600">*</span>
+                    </label>
+                    <input
+                      type="tel"
+                      required
+                      placeholder="+91 98765 43210"
+                      value={contactForm.phone}
+                      onChange={(e) => setContactForm({ ...contactForm, phone: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink placeholder:text-stone/50 focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze"
+                    />
+                  </div>
+                </div>
+
+                {/* Row 2: Email & Category */}
+                <div className="grid gap-3.5 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Email Address (Optional)
+                    </label>
+                    <input
+                      type="email"
+                      placeholder="name@example.com"
+                      value={contactForm.email}
+                      onChange={(e) => setContactForm({ ...contactForm, email: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink placeholder:text-stone/50 focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Asset Category
+                    </label>
+                    <select
+                      value={contactForm.service}
+                      onChange={(e) => setContactForm({ ...contactForm, service: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze cursor-pointer"
+                    >
+                      <option value="Sale & Purchase of Properties">Sale &amp; Purchase of Properties</option>
+                      <option value="Renting & Leasing">Renting &amp; Leasing</option>
+                      <option value="Pre-Rented Commercial">Pre-Rented Commercial (High Yield)</option>
+                      <option value="Construction & Collaboration">Construction &amp; Collaboration</option>
+                      <option value="Luxury Builder Floor">Luxury Designer Floors</option>
+                      <option value="Independent Villa / Bungalow">Independent Villa / Bungalow</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row 3: Budget & Location */}
+                <div className="grid gap-3.5 sm:grid-cols-2">
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Investment Budget
+                    </label>
+                    <select
+                      value={contactForm.budget}
+                      onChange={(e) => setContactForm({ ...contactForm, budget: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze cursor-pointer"
+                    >
+                      <option value="Under ₹2 Cr">Under ₹2 Crore</option>
+                      <option value="₹2 - 5 Cr">₹2 – ₹5 Crore</option>
+                      <option value="₹5 - 10 Cr">₹5 – ₹10 Crore</option>
+                      <option value="₹10 - 25 Cr">₹10 – ₹25 Crore</option>
+                      <option value="₹25 Cr+">₹25 Crore+</option>
+                    </select>
+                  </div>
+
+                  <div>
+                    <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                      Preferred Location
+                    </label>
+                    <select
+                      value={contactForm.location}
+                      onChange={(e) => setContactForm({ ...contactForm, location: e.target.value })}
+                      className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze cursor-pointer"
+                    >
+                      <option value="DLF Phase 1 & 2, Gurugram">DLF Phase 1 &amp; 2, Gurugram</option>
+                      <option value="Golf Course Road Corridor">Golf Course Road Corridor</option>
+                      <option value="Golf Course Ext & SPR">Golf Course Ext &amp; SPR</option>
+                      <option value="Cyber City Commercial Corridor">Cyber City Commercial Corridor</option>
+                      <option value="South Delhi / Vasant Vihar">South Delhi / Vasant Vihar</option>
+                      <option value="Sohna Road Integrated Townships">Sohna Road Integrated Townships</option>
+                    </select>
+                  </div>
+                </div>
+
+                {/* Row 4: Message */}
+                <div>
+                  <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                    Requirement Notes (Optional)
+                  </label>
+                  <textarea
+                    rows="3"
+                    placeholder="Tell us about specific plot size, configuration, preferred sector, or immediate possession timeline..."
+                    value={contactForm.message}
+                    onChange={(e) => setContactForm({ ...contactForm, message: e.target.value })}
+                    className="w-full rounded-md border border-ink/15 bg-ivory/50 px-3.5 py-2.5 text-xs sm:text-sm text-ink placeholder:text-stone/50 focus:border-bronze focus:bg-white focus:outline-none focus:ring-1 focus:ring-bronze resize-none"
+                  />
+                </div>
+
+                {/* Row 5: Submit Button */}
+                <div className="pt-2">
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="w-full inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-6 py-3.5 text-xs sm:text-sm font-bold uppercase tracking-wider text-white shadow-md transition-all hover:bg-bronze hover:shadow-lg disabled:opacity-60 cursor-pointer"
+                  >
+                    {isSubmitting ? (
+                      <span>Submitting Enquiry...</span>
+                    ) : (
+                      <>
+                        <span>Submit Confidential Enquiry</span>
+                        <Arrow className="h-4 w-4" />
+                      </>
+                    )}
+                  </button>
+                  <p className="mt-2 text-center text-[11px] text-stone">
+                    🔒 100% Privacy Assured · No Unsolicited Spam · Response within 30 Mins
+                  </p>
+                </div>
+              </form>
+            </div>
           </div>
         </div>
       </section>

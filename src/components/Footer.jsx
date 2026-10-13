@@ -120,6 +120,9 @@ export default function Footer() {
       <div className="border-t border-white/10 py-5 text-xs text-white/50">
         <div className="wrap flex flex-wrap justify-between items-center gap-3">
           <span>{company.copyright}. All rights reserved.</span>
+          <span className="text-white/60">
+            Powered by <strong className="text-bronze-l font-semibold">Unique Digital Tech Pvt Ltd</strong>
+          </span>
           <span className="text-bronze-l font-medium">
             Assuring Best Properties &amp; Complete Property Management
           </span>

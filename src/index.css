@@ -22,7 +22,7 @@
 
 @layer components {
   .wrap { @apply mx-auto w-[min(1240px,100%-40px)]; }
-  .section { @apply py-16 md:py-24 lg:py-28; }
+  .section { @apply py-8 md:py-12 lg:py-14; }
   .kicker { @apply mb-3 block text-[0.78rem] font-bold uppercase tracking-[0.18em] text-bronze; }
   .h2 { @apply text-[clamp(2rem,4vw,3.2rem)] mb-4; }
   .btn { @apply inline-flex cursor-pointer items-center gap-2.5 border border-bronze bg-bronze px-7 py-3.5 text-[0.82rem] font-bold uppercase tracking-[0.08em] text-white transition duration-300 hover:-translate-y-0.5 hover:border-bronze-d hover:bg-bronze-d hover:shadow-[0_12px_26px_-10px_rgba(138,106,59,0.7)]; }

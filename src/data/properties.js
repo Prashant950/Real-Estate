@@ -289,9 +289,9 @@ export const ASSET_CATEGORIES = [
     link: '#properties-showcase',
   },
   {
-    id: 'Houses, Bungalows & Villas',
+    id: 'Bungalows & Houses',
     slug: 'villas',
-    title: 'Houses, Bungalows & Villas',
+    title: 'Bungalows & Houses',
     badge: 'RESIDENTIAL / SALE',
     image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1000&q=85',
     description: 'Independent grand residences, sprawling farmhouses & private gated estates.',

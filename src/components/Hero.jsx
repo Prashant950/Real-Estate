@@ -51,12 +51,12 @@ export default function Hero() {
     setActiveSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)
   }, [])
 
-  // Fast Auto-Slide Interval (3.2 seconds)
+  // Auto-Slide Interval (4.0 seconds)
   useEffect(() => {
     if (isPaused) return
     const timer = setInterval(() => {
       nextSlide()
-    }, 3200)
+    }, 4000)
     return () => clearInterval(timer)
   }, [isPaused, nextSlide])
 
@@ -82,29 +82,23 @@ export default function Hero() {
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* 1. Clear Natural Full HD Auto-Sliding Images with ZERO Dark Overlays */}
+      {/* 1. Clear Natural Full HD Auto-Sliding Images with Smooth Horizontal Slide */}
       <div className="absolute inset-0 -z-20 overflow-hidden">
-        {HERO_SLIDES.map((slide, index) => {
-          const isActive = index === activeSlide
-          return (
-            <div
-              key={slide.image}
-              aria-hidden={!isActive}
-              className={`absolute inset-0 transition-opacity duration-700 ease-in-out ${
-                isActive ? 'opacity-100 z-10' : 'opacity-0 z-0 pointer-events-none'
-              }`}
-            >
+        <div
+          className="flex h-full w-full transition-transform duration-1000 ease-in-out"
+          style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+        >
+          {HERO_SLIDES.map((slide, index) => (
+            <div key={slide.image} className="h-full w-full shrink-0 relative">
               <img
                 src={slide.image}
                 alt={slide.title}
                 loading={index === 0 ? 'eager' : 'lazy'}
-                className={`h-full w-full object-cover object-center ${
-                  isActive ? 'animate-hero-motion' : 'scale-100'
-                }`}
+                className="h-full w-full object-cover object-center select-none"
               />
             </div>
-          )
-        })}
+          ))}
+        </div>
       </div>
 
       {/* 2. Transparent Hero Foreground Content - Shifted right with larger typography & zero black box */}
