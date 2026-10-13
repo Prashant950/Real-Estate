@@ -14,11 +14,15 @@ export default function Footer() {
     <footer className="bg-[#121110] pt-20 text-[0.92rem] text-[#bdb6a8] border-t border-white/10">
       <div className="wrap grid gap-11 pb-14 sm:grid-cols-2 lg:grid-cols-[1.4fr_1fr_1.1fr_1.3fr]">
         <div>
-          {/* Typographic Luxury Brand Logo */}
-          <div className="flex items-center gap-3 mb-4">
-            <span className="relative grid h-11 w-11 place-items-center border-2 border-bronze bg-ink font-serif text-2xl font-bold text-bronze-l">
-              R<span className="absolute inset-0.5 border border-bronze/40" />
-            </span>
+          {/* Luxury Brand Logo */}
+          <div className="flex items-center gap-3.5 mb-4">
+            <div className="relative flex items-center justify-center rounded-xl bg-white p-1 border border-bronze/40 shadow-[0_4px_16px_rgba(184,138,68,0.25)] h-12 w-12 shrink-0">
+              <img
+                src="/logo.png"
+                alt="Real Estate Square Official Logo"
+                className="h-full w-full object-contain"
+              />
+            </div>
             <div>
               <span className="font-serif text-xl font-bold uppercase tracking-wider text-white block">
                 Real Estate Square

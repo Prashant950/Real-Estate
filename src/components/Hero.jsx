@@ -36,29 +36,50 @@ const HERO_SLIDES = [
   },
 ]
 
-export default function Hero() {
-  const { setIsAddModalOpen } = useProperties()
+const slidesWithClone = [...HERO_SLIDES, HERO_SLIDES[0]]
 
-  const [activeSlide, setActiveSlide] = useState(0)
-  const [isPaused, setIsPaused] = useState(false)
+export default function Hero() {
+  const [current, setCurrent] = useState(0)
+  const [isTransitioning, setIsTransitioning] = useState(true)
   const touchStartX = useRef(0)
 
+  // 0 to 4 for dots & titles
+  const activeSlide = current % HERO_SLIDES.length
+
   const nextSlide = useCallback(() => {
-    setActiveSlide((prev) => (prev + 1) % HERO_SLIDES.length)
+    setIsTransitioning(true)
+    setCurrent((prev) => prev + 1)
   }, [])
 
   const prevSlide = useCallback(() => {
-    setActiveSlide((prev) => (prev - 1 + HERO_SLIDES.length) % HERO_SLIDES.length)
+    setIsTransitioning(true)
+    setCurrent((prev) => (prev === 0 ? HERO_SLIDES.length - 1 : prev - 1))
   }, [])
 
-  // Auto-Slide Interval (4.0 seconds)
+  // Continuous auto-slide every 5 seconds (5-6s lgataar non-stop)
   useEffect(() => {
-    if (isPaused) return
     const timer = setInterval(() => {
       nextSlide()
-    }, 4000)
+    }, 5000)
     return () => clearInterval(timer)
-  }, [isPaused, nextSlide])
+  }, [nextSlide])
+
+  // Seamless infinite loop: when reaching clone at index 5, snap back to 0 without transition
+  useEffect(() => {
+    if (current === HERO_SLIDES.length) {
+      const timer = setTimeout(() => {
+        setIsTransitioning(false)
+        setCurrent(0)
+        // Re-enable smooth transition immediately after instantaneous snap
+        requestAnimationFrame(() => {
+          requestAnimationFrame(() => {
+            setIsTransitioning(true)
+          })
+        })
+      }, 1000)
+      return () => clearTimeout(timer)
+    }
+  }, [current])
 
   // Mobile Touch Swipe Handling
   const handleTouchStart = (e) => {
@@ -73,23 +94,28 @@ export default function Hero() {
     }
   }
 
+  const goToSlide = (idx) => {
+    setIsTransitioning(true)
+    setCurrent(idx)
+  }
+
   return (
     <section
       aria-label="Hero Showcase"
       className="relative isolate overflow-hidden text-white h-[calc(100vh-80px)] min-h-[540px] max-h-[840px] flex items-center"
-      onMouseEnter={() => setIsPaused(true)}
-      onMouseLeave={() => setIsPaused(false)}
       onTouchStart={handleTouchStart}
       onTouchEnd={handleTouchEnd}
     >
-      {/* 1. Clear Natural Full HD Auto-Sliding Images with Smooth Horizontal Slide */}
+      {/* 1. Clear Natural Full HD Auto-Sliding Images with Smooth Seamless Horizontal Slide */}
       <div className="absolute inset-0 -z-20 overflow-hidden">
         <div
-          className="flex h-full w-full transition-transform duration-1000 ease-in-out"
-          style={{ transform: `translateX(-${activeSlide * 100}%)` }}
+          className={`flex h-full w-full ${
+            isTransitioning ? 'transition-transform duration-1000 ease-in-out' : ''
+          }`}
+          style={{ transform: `translateX(-${current * 100}%)` }}
         >
-          {HERO_SLIDES.map((slide, index) => (
-            <div key={slide.image} className="h-full w-full shrink-0 relative">
+          {slidesWithClone.map((slide, index) => (
+            <div key={`${slide.image}-${index}`} className="h-full w-full shrink-0 relative">
               <img
                 src={slide.image}
                 alt={slide.title}
@@ -125,8 +151,6 @@ export default function Hero() {
               <span>Explore Properties</span>
               <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />
             </Link>
-
-  
           </div>
         </div>
       </div>
@@ -150,7 +174,7 @@ export default function Hero() {
                 <button
                   key={idx}
                   type="button"
-                  onClick={() => setActiveSlide(idx)}
+                  onClick={() => goToSlide(idx)}
                   aria-label={`Go to slide ${idx + 1}`}
                   className={`h-1.5 rounded-full transition-all duration-300 cursor-pointer ${
                     activeSlide === idx

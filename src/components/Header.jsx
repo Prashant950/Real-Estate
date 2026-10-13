@@ -41,25 +41,23 @@ export default function Header() {
           <Link
             to="/"
             onClick={() => setOpen(false)}
-            className="flex items-center gap-3 leading-tight group"
+            className="flex items-center gap-3.5 leading-tight group py-1"
             aria-label="Real Estate Square - Home"
           >
-            <span
-              className={`relative grid place-items-center border-2 border-bronze bg-ink font-serif font-bold text-bronze-l transition-all duration-300 shadow-md group-hover:scale-105 ${
-                small ? 'h-10 w-10 text-xl' : 'h-11 w-11 md:h-[48px] md:w-[48px] text-2xl'
+            <div
+              className={`relative flex items-center justify-center rounded-xl bg-white p-1 border border-bronze/35 shadow-sm transition-all duration-300 group-hover:border-bronze group-hover:shadow-md group-hover:scale-105 shrink-0 ${
+                small ? 'h-10 w-10 md:h-11 md:w-11' : 'h-12 w-12 md:h-14 md:w-14'
               }`}
             >
-              R
-              <span className="absolute inset-0.5 border border-bronze/40" />
-            </span>
-            <div className="flex flex-col">
-              <span className="font-serif text-[1.22rem] font-bold uppercase tracking-[0.05em] text-ink sm:text-[1.52rem] leading-none">
-                Real Estate Square
-              </span>
-              <span className="font-sans text-[0.58rem] font-bold tracking-[0.22em] text-bronze-d uppercase sm:text-[0.66rem] mt-1">
-                Assuring Best Properties &amp; Management
-              </span>
+              <img
+                src="/logo.png"
+                alt="Real Estate Square Official Logo"
+                className="h-full w-full object-contain"
+              />
             </div>
+            <span className="font-serif text-[1.22rem] font-bold uppercase tracking-[0.05em] text-ink sm:text-[1.52rem] leading-none">
+              Real Estate Square
+            </span>
           </Link>
 
           {/* Desktop Navigation Links */}
