@@ -6,6 +6,7 @@ import Reveal from '../components/Reveal'
 import { useProperties } from '../context/PropertyContext'
 import { ASSET_CATEGORIES } from '../data/properties'
 import usePageMeta from '../hooks/usePageMeta'
+import VideoShowcase from '../components/VideoShowcase'
 
 export default function Home() {
   usePageMeta(
@@ -325,7 +326,8 @@ export default function Home() {
         </div>
       </section>
 
-     
+      {/* Section 5: Cinematic Real Estate Video Tours (Right under Specialized Services) */}
+      <VideoShowcase />
 
       {/* Section 6: Dark Gold Stats Banner ("Years of Excellence In Delhi NCR") */}
       <section className="relative isolate overflow-hidden bg-[#121110] py-12 text-white md:py-16">
