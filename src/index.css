@@ -1,0 +1,33 @@
+@import "tailwindcss";
+
+@theme {
+  --color-ink: #1c1b19;
+  --color-ink-2: #2a2825;
+  --color-ivory: #faf7f1;
+  --color-sand: #efe9dd;
+  --color-bronze: #bd954d;
+  --color-bronze-d: #916d2e;
+  --color-bronze-l: #e5c982;
+  --color-stone: #6f6b63;
+  --font-serif: "Cormorant Garamond", Georgia, "Times New Roman", serif;
+  --font-sans: "Manrope", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+}
+
+@layer base {
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
+  body { @apply bg-ivory text-ink font-sans antialiased overflow-x-hidden leading-relaxed; }
+  h1, h2, h3, h4 { @apply font-serif font-semibold leading-[1.1] tracking-tight; }
+  :focus-visible { outline: 2px solid var(--color-bronze); outline-offset: 3px; }
+}
+
+@layer components {
+  .wrap { @apply mx-auto w-[min(1240px,100%-40px)]; }
+  .section { @apply py-16 md:py-24 lg:py-28; }
+  .kicker { @apply mb-3 block text-[0.78rem] font-bold uppercase tracking-[0.18em] text-bronze; }
+  .h2 { @apply text-[clamp(2rem,4vw,3.2rem)] mb-4; }
+  .btn { @apply inline-flex cursor-pointer items-center gap-2.5 border border-bronze bg-bronze px-7 py-3.5 text-[0.82rem] font-bold uppercase tracking-[0.08em] text-white transition duration-300 hover:-translate-y-0.5 hover:border-bronze-d hover:bg-bronze-d hover:shadow-[0_12px_26px_-10px_rgba(138,106,59,0.7)]; }
+  .btn-ghost { @apply border-white/70 bg-transparent hover:border-white hover:bg-white hover:text-ink; }
+  .btn-dark { @apply border-ink bg-ink hover:border-bronze hover:bg-bronze; }
+  .field label { @apply mb-1.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-stone; }
+  .field select, .field input, .field textarea { @apply w-full rounded-none border border-ink/15 bg-ivory px-3.5 py-3 text-base font-medium text-ink transition focus:border-bronze focus:outline-none focus:ring-4 focus:ring-bronze/20; }
+}
