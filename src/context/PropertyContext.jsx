@@ -3,7 +3,7 @@ import { INITIAL_PROPERTIES } from '../data/properties'
 
 const PropertyContext = createContext(null)
 
-const STORAGE_KEY = 'res_properties_v2'
+const STORAGE_KEY = 'adani_plots_properties_v2'
 
 export function PropertyProvider({ children }) {
   // Load saved properties or default list

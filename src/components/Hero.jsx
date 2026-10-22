@@ -127,18 +127,18 @@ export default function Hero() {
         </div>
       </div>
 
-      {/* 2. Transparent Hero Foreground Content - Shifted right with larger typography & zero black box */}
-      <div className="wrap relative z-20 w-full py-8 pl-4 sm:pl-12 md:pl-20 lg:pl-28 xl:pl-36">
+      {/* 2. Transparent Hero Foreground Content - Shifted upwards and increased text size */}
+      <div className="wrap relative z-20 w-full pt-2 pb-8 sm:py-8 pl-4 sm:pl-12 md:pl-20 lg:pl-28 xl:pl-36 -translate-y-10 sm:-translate-y-8 md:translate-y-0">
         <div className="max-w-2xl lg:max-w-3xl animate-fade-in">
           {/* Main Headline - Larger, Grand & Transparent Background */}
-          <h1 className="font-serif text-[clamp(2.3rem,4.8vw,4rem)] font-bold tracking-tight text-white leading-[1.08] mb-3 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
+          <h1 className="font-serif text-[clamp(2.65rem,5.5vw,4.4rem)] font-bold tracking-tight text-white leading-[1.08] mb-2.5 sm:mb-3 drop-shadow-[0_4px_16px_rgba(0,0,0,0.85)]">
             REAL ESTATE SQUARE
-            <span className="block font-normal italic text-bronze-l mt-1.5 text-[clamp(1.5rem,3.2vw,2.5rem)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
+            <span className="block font-normal italic text-bronze-l mt-1.5 sm:mt-2 text-[clamp(1.65rem,3.7vw,2.75rem)] drop-shadow-[0_2px_12px_rgba(0,0,0,0.85)]">
               Assuring Best Properties &amp; Complete Property Management
             </span>
           </h1>
 
-          <p className="max-w-[56ch] text-sm sm:text-base md:text-lg text-white/95 leading-relaxed mb-7 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium">
+          <p className="max-w-[56ch] text-[1rem] sm:text-[1.08rem] md:text-lg text-white/95 leading-relaxed mb-5 sm:mb-7 drop-shadow-[0_2px_8px_rgba(0,0,0,0.85)] font-medium">
             A thorough leader in sale, purchase, leasing, turnkey constructions, and high-yield commercial investments across Gurugram, DLF Phase 1, Golf Course Road, and South Delhi.
           </p>
 
@@ -146,7 +146,7 @@ export default function Hero() {
           <div className="flex flex-wrap items-center gap-3.5">
             <Link
               to="/properties"
-              className="group inline-flex items-center gap-2.5 rounded-md bg-gradient-to-r from-bronze to-amber-600 px-6 sm:px-7 py-3 text-xs sm:text-sm font-bold uppercase tracking-widest text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] transition duration-300 hover:brightness-110 hover:-translate-y-0.5 cursor-pointer"
+              className="group inline-flex items-center gap-2.5 rounded-md bg-gradient-to-r from-bronze to-amber-600 px-6 sm:px-7 py-3 sm:py-3.5 text-xs sm:text-sm font-bold uppercase tracking-widest text-white shadow-[0_10px_25px_-5px_rgba(0,0,0,0.5)] transition duration-300 hover:brightness-110 hover:-translate-y-0.5 cursor-pointer"
             >
               <span>Explore Properties</span>
               <Arrow className="h-4 w-4 transition-transform group-hover:translate-x-1" />

@@ -148,20 +148,65 @@ export const benefits = [
   ][i]),
 }))
 
-export const projectCount = 27
-const projectPhotos = [
-  'photo-1600585154340-be6161a56a0c',
-  'photo-1600607687939-ce8a6c25118c',
-  'photo-1600607687920-4e2a09cf159d',
-  'photo-1486406146926-c627a92ad1ab',
-  'photo-1600210492486-724fe5c67fb0',
-  'photo-1600566753086-00f18fb6b3ea',
+export const projects = [
+  {
+    id: 'trevoc-3bhk',
+    name: 'TREVOC Royal Residences — 3 BHK + Utility (2,642 Sq.Ft)',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/exterior.jpg',
+    category: '3 BHK + Utility',
+    specs: '2,642 Sq.Ft · 2 Iconic Towers · 11 Ft Ceilings',
+  },
+  {
+    id: 'trevoc-4bhk',
+    name: 'TREVOC Royal Residences — 4 BHK + Utility (3,380 Sq.Ft)',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/living.jpg',
+    category: '4 BHK + Utility',
+    specs: '3,380 Sq.Ft · Wrap-Around Balcony · Private Lobby',
+  },
+  {
+    id: 'trevoc-club-royal',
+    name: 'Club Royal — 50,000 Sq. Ft Curated Luxury Club',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/club_royal.jpg',
+    category: '50,000 Sq.Ft Clubhouse',
+    specs: 'Sunken Seating · Heated Pool · VR Gaming · Spa · Mini Cinema',
+  },
+  {
+    id: 'trevoc-skydeck',
+    name: 'Skydeck — 36,000 Sq. Ft Open-to-Sky Experience',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/skydeck.jpg',
+    category: '36,000 Sq.Ft Rooftop',
+    specs: 'Panoramic City Views · Jogging Track · Open-Air Theatre · Cabanas',
+  },
+  {
+    id: 'trevoc-pool',
+    name: 'Temperature-Controlled Pools & Wellness Suites',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/pool.jpg',
+    category: 'Wellness & Aquatic',
+    specs: 'Submerged Loungers · Living Green Wall · Holistic Spa',
+  },
+  {
+    id: 'trevoc-suite',
+    name: 'Master Bedroom Suite with Wrap-Around Balcony',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/master_suite.jpg',
+    category: 'Signature Suite',
+    specs: 'Chevron Oak Wood Flooring · Walk-In Closet · Golf Course Views',
+  },
+  {
+    id: 'trevoc-lobby',
+    name: 'Grand Entrance Lobbies & 5-Tier Biometric Security',
+    location: 'Sector 56, Golf Course Road, Gurgaon',
+    image: '/images/trevoc/lobby.jpg',
+    category: 'Grand Arrival',
+    specs: 'Triple-Height Onyx Lobbies · Resident Elevators · 5-Level Parking',
+  },
 ]
-export const projects = Array.from({ length: projectCount }, (_, i) => ({
-  id: i + 1,
-  name: `Project ${String(i + 1).padStart(2, '0')}`,
-  image: propertyPhoto(projectPhotos[i % projectPhotos.length]),
-}))
+export const projectCount = projects.length
 
 export const values = [
   { title: 'Integrity', text: 'Real Estate Square will epitomise not only professional real estate knowledge, but a dedication to integrity and responsiveness to every customer whom we have the privilege of serving – and will be clear, accessible and expert.' },
