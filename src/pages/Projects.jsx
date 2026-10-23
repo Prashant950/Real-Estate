@@ -76,6 +76,7 @@ export default function Projects() {
                 <img
                   src={galleryImages[activeImageIndex].src}
                   alt={galleryImages[activeImageIndex].title}
+                  decoding="async"
                   className="h-full w-full object-cover transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/80 via-transparent to-black/20" />
@@ -107,7 +108,7 @@ export default function Projects() {
                         : 'border-transparent opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={g.src} alt={g.title} className="h-full w-full object-cover" />
+                    <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -246,6 +247,7 @@ export default function Projects() {
                         src={p.image}
                         alt={p.title}
                         loading="lazy"
+                        decoding="async"
                         className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                       />
                       <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />
@@ -342,6 +344,8 @@ export default function Projects() {
                   <img
                     src="/images/trevoc/club_royal.jpg"
                     alt="Club Royal Fine Dining with Sunken Seating"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full aspect-[16/9] object-cover"
                   />
                 </div>
@@ -386,6 +390,8 @@ export default function Projects() {
                   <img
                     src="/images/trevoc/skydeck.jpg"
                     alt="Rooftop Skydeck Jogging Track & Cabanas"
+                    loading="lazy"
+                    decoding="async"
                     className="w-full aspect-[16/9] object-cover"
                   />
                 </div>

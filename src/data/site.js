@@ -6,8 +6,8 @@
 export const IMG_BASE = 'https://www.realestatesquare.in/assets/images/'
 export const img = (path) => path.startsWith('https://') ? path : `${IMG_BASE}${path}`
 
-const propertyPhoto = (id, width = 1400) =>
-  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=88`
+const propertyPhoto = (id, width = 1000) =>
+  `https://images.unsplash.com/${id}?auto=format&fit=crop&w=${width}&q=75`
 
 export const company = {
   name: 'Real Estate Square',
@@ -37,21 +37,21 @@ export const navLinks = [
 
 export const slides = [
   {
-    image: propertyPhoto('photo-1600607687939-ce8a6c25118c', 2200),
+    image: propertyPhoto('photo-1600607687939-ce8a6c25118c', 1200),
     alt: 'Apartments, condos and penthouses in Gurugram and Delhi NCR',
     kicker: 'Gurugram & Delhi NCR',
     title: 'Premium Real Estate Solutions in Gurugram & Delhi NCR',
     text: company.description,
   },
   {
-    image: propertyPhoto('photo-1486406146926-c627a92ad1ab', 2200),
+    image: propertyPhoto('photo-1486406146926-c627a92ad1ab', 1200),
     alt: 'Commercial spaces, SCO, shop cum offices, shops in malls, office spaces',
     kicker: 'Commercial Properties',
     title: 'Are you looking for commercial spaces?',
     text: 'SCO, shop cum offices, shops in malls and office spaces in Gurugram & Delhi NCR.',
   },
   {
-    image: propertyPhoto('photo-1497366754035-f200968a6e72', 2200),
+    image: propertyPhoto('photo-1497366754035-f200968a6e72', 1200),
     alt: 'All kinds of office spaces, retail shops and SCOs',
     kicker: 'Office Spaces & Retail',
     title: 'We deal in all kinds of office spaces',

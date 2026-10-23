@@ -46,6 +46,7 @@ export default function PropertyDetailsModal() {
               <img
                 src={images[activeImageIndex] || p.image}
                 alt={p.title}
+                decoding="async"
                 className="h-full w-full object-cover transition-all duration-500"
               />
               <div className="absolute bottom-4 left-4 rounded-md bg-black/70 px-3 py-1 text-sm font-semibold text-white backdrop-blur-sm">
@@ -67,7 +68,7 @@ export default function PropertyDetailsModal() {
                       activeImageIndex === idx ? 'border-bronze ring-2 ring-bronze' : 'border-white/20 opacity-60 hover:opacity-100'
                     }`}
                   >
-                    <img src={img} alt="Thumbnail" className="h-full w-full object-cover" />
+                    <img src={img} alt="Thumbnail" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>

@@ -78,6 +78,7 @@ export default function Properties() {
                 <img
                   src={adaniGallery[activeGalleryIndex].src}
                   alt={adaniGallery[activeGalleryIndex].title}
+                  decoding="async"
                   className="h-full w-full object-cover transition-all duration-700"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-black/75 via-transparent to-black/20" />
@@ -109,7 +110,7 @@ export default function Properties() {
                         : 'border-transparent opacity-70 hover:opacity-100'
                     }`}
                   >
-                    <img src={g.src} alt={g.title} className="h-full w-full object-cover" />
+                    <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>
                 ))}
               </div>
@@ -311,6 +312,7 @@ export default function Properties() {
                     src={p.image}
                     alt={p.title}
                     loading="lazy"
+                    decoding="async"
                     className="h-full w-full object-cover transition-transform duration-700 group-hover:scale-108"
                   />
                   <div className="absolute inset-0 bg-gradient-to-t from-black/70 via-transparent to-black/20" />

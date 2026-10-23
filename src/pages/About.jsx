@@ -141,9 +141,10 @@ export default function About() {
           <Reveal className="relative">
             <div className="overflow-hidden rounded-2xl shadow-2xl border border-ink/10 bg-white">
               <img
-                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1600&q=90"
+                src="https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=900&q=75"
                 alt="Luxury builder floors and architectural residences in Gurugram Delhi NCR"
                 loading="lazy"
+                decoding="async"
                 className="aspect-[5/4] w-full object-cover transition-transform duration-1000 hover:scale-105"
               />
               <div className="bg-[#161513] px-5 py-3 text-white flex items-center justify-between border-t border-bronze/30">

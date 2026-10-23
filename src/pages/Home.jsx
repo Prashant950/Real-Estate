@@ -113,6 +113,7 @@ export default function Home() {
                       src={cat.image}
                       alt={cat.title}
                       loading="lazy"
+                      decoding="async"
                       className="h-full w-full object-cover transition-transform duration-1000 group-hover:scale-110"
                     />
                     <div className="absolute inset-0 bg-gradient-to-t from-black/90 via-black/30 to-black/20" />
@@ -155,9 +156,10 @@ export default function Home() {
           <Reveal className="relative">
             <div className="relative overflow-hidden rounded-2xl shadow-2xl group border border-ink/10">
               <img
-                src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=1600&q=90"
+                src="https://images.unsplash.com/photo-1613977257363-707ba9348227?auto=format&fit=crop&w=900&q=75"
                 alt="Luxury Villa by Real Estate Square"
                 loading="lazy"
+                decoding="async"
                 className="w-full aspect-[4/3] object-cover transition-transform duration-1000 group-hover:scale-105"
               />
               <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-black/20" />
@@ -333,7 +335,7 @@ export default function Home() {
       <section className="relative isolate overflow-hidden bg-[#121110] py-12 text-white md:py-16">
         <div
           className="absolute inset-0 -z-20 bg-cover bg-center opacity-20"
-          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2000&q=80')` }}
+          style={{ backgroundImage: `url('https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1200&q=70')` }}
         />
         <div className="absolute inset-0 -z-10 bg-gradient-to-r from-[#121110] via-[#121110]/90 to-[#121110]/70" />
 

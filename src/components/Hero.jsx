@@ -5,31 +5,31 @@ import { Arrow } from './Icons'
 
 const HERO_SLIDES = [
   {
-    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=2560&q=95',
+    image: 'https://images.unsplash.com/photo-1600607687939-ce8a6c25118c?auto=format&fit=crop&w=1440&q=75',
     title: 'Sky Duplexes & Presidential Penthouses',
     kicker: 'Panoramic Skyline Living',
     caption: 'Private lap pools, direct high-speed elevators & double-height decks',
   },
   {
-    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=2560&q=95',
+    image: 'https://images.unsplash.com/photo-1600596542815-ffad4c1539a9?auto=format&fit=crop&w=1440&q=75',
     title: 'Exclusive Independent Villas & Estates',
     kicker: 'Bespoke Residential Sanctuaries',
     caption: 'Gated ultra-luxury private residences with landscaped grounds',
   },
   {
-    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=2560&q=95',
+    image: 'https://images.unsplash.com/photo-1600585154340-be6161a56a0c?auto=format&fit=crop&w=1440&q=75',
     title: 'Turnkey Hybrid Designer Floors',
     kicker: 'Architectural Excellence & Civil Craft',
     caption: 'Italian marble, Schüco fenestration & crystal-clear freehold titles',
   },
   {
-    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=2560&q=95',
+    image: 'https://images.unsplash.com/photo-1545324418-cc1a3fa10c00?auto=format&fit=crop&w=1440&q=75',
     title: 'DLF Phase 1 & Golf Course Road Corridor',
     kicker: 'Gurugram & Delhi NCR Premier Assets',
     caption: 'Trophy high-rises & luxury condominiums with unhindered views',
   },
   {
-    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=2560&q=95',
+    image: 'https://images.unsplash.com/photo-1486406146926-c627a92ad1ab?auto=format&fit=crop&w=1440&q=75',
     title: 'High-Yield Pre-Leased Commercial & SCOs',
     kicker: 'Institutional Grade Capital Returns',
     caption: 'Assured 9% to 12% annual yields backed by blue-chip MNC leases',
@@ -120,6 +120,8 @@ export default function Hero() {
                 src={slide.image}
                 alt={slide.title}
                 loading={index === 0 ? 'eager' : 'lazy'}
+                fetchPriority={index === 0 ? 'high' : 'low'}
+                decoding="async"
                 className="h-full w-full object-cover object-center select-none"
               />
             </div>
