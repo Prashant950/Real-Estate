@@ -1,7 +1,7 @@
 import { useState } from 'react'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/CtaBand'
-import { Arrow, WhatsAppIcon } from '../components/Icons'
+import { Arrow, WhatsAppIcon, CalendarBookIcon } from '../components/Icons'
 import PageBanner from '../components/PageBanner'
 import Reveal from '../components/Reveal'
 import { useProperties } from '../context/PropertyContext'
@@ -117,7 +117,7 @@ export default function Properties() {
             </div>
 
             {/* Right: Key Project Details Card & Rates Matrix (5 cols) */}
-            <div className="lg:col-span-5 flex flex-col justify-between rounded-2xl border border-ink/10 bg-white p-6 sm:p-7 shadow-lg">
+            <div className="lg:col-span-5 flex flex-col justify-between rounded-2xl border border-ink/10 bg-white p-4 sm:p-6 md:p-7 shadow-lg">
               <div>
                 <div className="flex items-center justify-between border-b border-ink/10 pb-4 mb-4">
                   <div>
@@ -181,7 +181,7 @@ export default function Properties() {
               </div>
 
               {/* Quick WhatsApp & Call Action */}
-              <div className="mt-6 flex flex-wrap gap-3">
+              <div className="mt-6 flex flex-col sm:flex-row gap-3">
                 <a
                   href="https://wa.me/918800006689?text=Hello%2C%20I%20am%20interested%20in%20Adani%20Plots%20Sector%2063%2C%20Gurugram.%20Please%20share%20allotment%20details."
                   target="_blank"
@@ -196,6 +196,7 @@ export default function Properties() {
                   onClick={() => openBooking(properties[0])}
                   className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg bg-ink px-4 py-3 text-xs font-bold uppercase tracking-wider text-white shadow transition hover:bg-bronze cursor-pointer"
                 >
+                  <CalendarBookIcon className="h-4 w-4 text-bronze-l" />
                   <span>Book Site Visit</span>
                 </button>
               </div>
@@ -256,9 +257,10 @@ export default function Properties() {
                         <button
                           type="button"
                           onClick={() => openBooking(properties[idx] || properties[0])}
-                          className="rounded bg-ink px-4 py-2 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze cursor-pointer"
+                          className="inline-flex items-center gap-1.5 rounded bg-ink px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze cursor-pointer"
                         >
-                          Book Visit
+                          <CalendarBookIcon className="h-3.5 w-3.5 text-bronze-l" />
+                          <span>Book Visit</span>
                         </button>
                       </td>
                     </tr>
@@ -407,9 +409,10 @@ export default function Properties() {
                     <button
                       type="button"
                       onClick={() => openBooking(p)}
-                      className="flex-1 rounded bg-bronze py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d shadow-sm cursor-pointer"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded bg-bronze py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d shadow-sm cursor-pointer"
                     >
-                      Schedule Visit
+                      <CalendarBookIcon className="h-3.5 w-3.5 text-white" />
+                      <span>Schedule</span>
                     </button>
                   </div>
                 </div>

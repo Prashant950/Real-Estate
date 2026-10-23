@@ -1,6 +1,6 @@
 import { useState, useEffect } from 'react'
 import Reveal from './Reveal'
-import { WhatsAppIcon, Arrow } from './Icons'
+import { WhatsAppIcon, Arrow, CalendarBookIcon } from './Icons'
 import { company } from '../data/site'
 import { useProperties } from '../context/PropertyContext'
 
@@ -319,10 +319,10 @@ export default function VideoShowcase() {
                   <button
                     type="button"
                     onClick={() => handleBookVisit(video)}
-                    className="cursor-pointer inline-flex items-center justify-center gap-1 rounded border border-white/20 bg-transparent px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:border-bronze hover:bg-white/10 hover:text-bronze-l"
+                    className="cursor-pointer inline-flex items-center justify-center gap-1.5 rounded border border-white/20 bg-transparent px-3 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition-all duration-200 hover:border-bronze hover:bg-white/10 hover:text-bronze-l"
                   >
+                    <CalendarBookIcon className="h-3.5 w-3.5 text-bronze-l" />
                     <span>Book Visit</span>
-                    <Arrow className="h-3 w-3" />
                   </button>
                 </div>
               </div>
@@ -541,15 +541,15 @@ export default function VideoShowcase() {
 
                   {/* Architectural & Legal Specifications */}
                   {activeVideo.specs && (
-                    <div className="rounded-xl border border-white/10 bg-[#1e1c18] p-5">
+                    <div className="rounded-xl border border-white/10 bg-[#1e1c18] p-4 sm:p-5">
                       <h4 className="text-xs font-bold uppercase tracking-wider text-bronze-l mb-3">
                         Architectural &amp; Legal Specifications
                       </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-2 text-xs">
+                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 sm:gap-y-2 text-xs">
                         {Object.entries(activeVideo.specs).map(([key, val]) => (
-                          <div key={key} className="flex justify-between border-b border-white/5 py-2">
-                            <span className="capitalize text-white/50">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                            <span className="font-medium text-white text-right">{val}</span>
+                          <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-0.5 sm:gap-2 border-b border-white/5 py-1.5 sm:py-2">
+                            <span className="capitalize text-white/50 font-medium shrink-0">{key.replace(/([A-Z])/g, ' $1')}:</span>
+                            <span className="font-semibold text-white text-left sm:text-right break-words">{val}</span>
                           </div>
                         ))}
                       </div>
@@ -577,6 +577,7 @@ export default function VideoShowcase() {
                         onClick={() => handleBookVisit(activeVideo)}
                         className="flex-1 sm:flex-initial inline-flex items-center justify-center gap-2 rounded-lg border border-bronze bg-bronze px-5 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d shadow-lg cursor-pointer"
                       >
+                        <CalendarBookIcon className="h-4 w-4" />
                         <span>Schedule Site Visit</span>
                       </button>
                     </div>
@@ -681,6 +682,7 @@ export default function VideoShowcase() {
                       onClick={() => handleBookVisit(activeVideo)}
                       className="flex-1 inline-flex items-center justify-center gap-2 rounded-lg border border-bronze bg-bronze px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d cursor-pointer"
                     >
+                      <CalendarBookIcon className="h-3.5 w-3.5" />
                       <span>Book Visit</span>
                     </button>
                   </div>

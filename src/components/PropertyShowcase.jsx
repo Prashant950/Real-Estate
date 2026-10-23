@@ -1,6 +1,7 @@
 import { useState } from 'react'
 import { useProperties } from '../context/PropertyContext'
 import Reveal from './Reveal'
+import { CalendarBookIcon } from './Icons'
 
 export default function PropertyShowcase() {
   const {
@@ -265,9 +266,10 @@ export default function PropertyShowcase() {
                     <button
                       type="button"
                       onClick={() => openBooking(p)}
-                      className="flex-1 rounded bg-bronze py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d shadow-sm"
+                      className="flex-1 inline-flex items-center justify-center gap-1.5 rounded bg-bronze py-2.5 text-center text-xs font-bold uppercase tracking-wider text-white transition hover:bg-bronze-d shadow-sm cursor-pointer"
                     >
-                      Schedule Visit
+                      <CalendarBookIcon className="h-3.5 w-3.5 text-white" />
+                      <span>Schedule Visit</span>
                     </button>
                   </div>
                 </div>

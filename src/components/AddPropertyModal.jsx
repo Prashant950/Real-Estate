@@ -53,21 +53,21 @@ export default function AddPropertyModal() {
       role="dialog"
       aria-modal="true"
       aria-labelledby="add-prop-title"
-      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-4 backdrop-blur-md transition-all animate-fade-in"
+      className="fixed inset-0 z-[100] flex items-center justify-center bg-black/80 p-2 sm:p-4 backdrop-blur-md transition-all animate-fade-in"
       onClick={(e) => e.target === e.currentTarget && setIsAddModalOpen(false)}
     >
-      <div className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-xl border border-bronze/40 bg-[#161513] text-[#f4efe6] shadow-2xl">
+      <div className="relative max-h-[92vh] w-full max-w-3xl overflow-y-auto rounded-2xl border border-bronze/40 bg-[#161513] text-[#f4efe6] shadow-2xl">
         {/* Modal Header */}
-        <div className="sticky top-0 z-10 flex items-center justify-between border-b border-white/10 bg-[#1c1b18] px-6 py-4">
-          <div className="flex items-center gap-3">
-            <span className="flex h-8 w-8 items-center justify-center rounded-full bg-bronze/20 text-bronze border border-bronze/40 font-serif font-bold text-lg">
+        <div className="sticky top-0 z-10 flex items-start justify-between gap-3 border-b border-white/10 bg-[#1c1b18]/95 backdrop-blur px-4 sm:px-6 py-3.5 sm:py-4">
+          <div className="flex items-center gap-3 min-w-0 pr-2">
+            <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-full bg-bronze/20 text-bronze border border-bronze/40 font-serif font-bold text-lg">
               +
             </span>
-            <div>
-              <h2 id="add-prop-title" className="font-serif text-2xl font-bold tracking-tight text-white">
+            <div className="min-w-0">
+              <h2 id="add-prop-title" className="font-serif text-lg sm:text-2xl font-bold tracking-tight text-white leading-snug">
                 List New Property / Asset
               </h2>
-              <p className="text-xs text-[#a9a295]">
+              <p className="text-xs text-[#a9a295] truncate">
                 Submit your residential or commercial inventory to Delhi NCR&apos;s verified network
               </p>
             </div>
@@ -75,7 +75,7 @@ export default function AddPropertyModal() {
           <button
             type="button"
             onClick={() => setIsAddModalOpen(false)}
-            className="flex h-9 w-9 items-center justify-center rounded-full bg-white/5 text-xl text-white/70 transition hover:bg-bronze hover:text-white"
+            className="flex h-8 w-8 sm:h-9 sm:w-9 shrink-0 items-center justify-center rounded-full bg-white/10 text-xl font-bold text-white/70 transition hover:bg-bronze hover:text-white cursor-pointer"
             aria-label="Close modal"
           >
             ×
@@ -83,7 +83,7 @@ export default function AddPropertyModal() {
         </div>
 
         {/* Modal Form */}
-        <form onSubmit={handleSubmit} className="space-y-5 p-6 text-sm">
+        <form onSubmit={handleSubmit} className="space-y-4 sm:space-y-5 p-4 sm:p-6 text-sm">
           {/* Title */}
           <div>
             <label className="mb-1 block font-semibold text-xs uppercase tracking-wider text-bronze-l">

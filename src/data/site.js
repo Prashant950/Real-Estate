@@ -20,7 +20,7 @@ export const company = {
   email: 'info@realestatesquare.in',
   whatsapp: '918800006689',
   facebook: 'https://www.facebook.com/profile.php?id=100083370151009',
-  instagram: 'https://www.instagram.com/realestatessquare2020/?igshid=YmMyMTA2M2Y%3D',
+  instagram: 'https://www.instagram.com/realestatessquare?cplk=dW9maXdwdTdncW9l',
   copyright: 'Copyright © 2022 REAL ESTATE SQUARE',
   gurugram: 'O-107, 1st Floor, Shopping Mall, Arjun Marg, DLF Phase-1, Gurugram, Haryana 122002 INDIA',
   delhi: 'B-1/18A, Paschim Vihar, New Delhi - 110063 INDIA',
