@@ -149,6 +149,24 @@ export const benefits = [
 }))
 
 export const projects = [
+  // 1. BPTP Green Oaks (Sector 70A)
+  {
+    id: 'bptp-plots-2side',
+    name: 'BPTP Green Oaks — 137 Sq. Yd. 2-Side Open Residential Plot',
+    location: 'Sector 70A, Gurgaon',
+    image: '/images/bptp/plot_2side.jpg',
+    category: 'Plotted Community · East-Facing',
+    specs: '137 Sq. Yd. (1,233 Sq. Ft) · Gated Society · Club House · Huge Park · 1% Commission',
+  },
+  {
+    id: 'bptp-plots-corner',
+    name: 'BPTP Green Oaks — 137 Sq. Yd. Corner Residential Plot',
+    location: 'Sector 70A, Gurgaon',
+    image: '/images/bptp/corner_plot.jpg',
+    category: 'Prime Corner Plot',
+    specs: '137 Sq. Yd. · East-Facing · Dual Road Frontage · SPR & NH-48 Connected',
+  },
+  // 2. TREVOC Royal Residences (Sector 56)
   {
     id: 'trevoc-3bhk',
     name: 'TREVOC Royal Residences — 3 BHK + Utility (2,642 Sq.Ft)',
@@ -181,29 +199,30 @@ export const projects = [
     category: '36,000 Sq.Ft Rooftop',
     specs: 'Panoramic City Views · Jogging Track · Open-Air Theatre · Cabanas',
   },
+  // 3. Adani Plots (Sector 63)
   {
-    id: 'trevoc-pool',
-    name: 'Temperature-Controlled Pools & Wellness Suites',
-    location: 'Sector 56, Golf Course Road, Gurgaon',
-    image: '/images/trevoc/pool.jpg',
-    category: 'Wellness & Aquatic',
-    specs: 'Submerged Loungers · Living Green Wall · Holistic Spa',
+    id: 'adani-plots-170',
+    name: 'Adani Plots Sector 63 — 170 Sq. Yd. Residential Plot',
+    location: 'Golf Extension Road, Sector 63, Gurugram',
+    image: '/images/adani/aerial.jpg',
+    category: 'S+4 Approved Plots',
+    specs: '170 Sq. Yd. (1,530 Sq. Ft) · Adjacent DLF The Arbour · 100% Power Backup',
   },
   {
-    id: 'trevoc-suite',
-    name: 'Master Bedroom Suite with Wrap-Around Balcony',
-    location: 'Sector 56, Golf Course Road, Gurgaon',
-    image: '/images/trevoc/master_suite.jpg',
-    category: 'Signature Suite',
-    specs: 'Chevron Oak Wood Flooring · Walk-In Closet · Golf Course Views',
+    id: 'adani-plots-253',
+    name: 'Adani Plots Sector 63 — 253 Sq. Yd. Residential Plot',
+    location: 'Golf Extension Road, Sector 63, Gurugram',
+    image: '/images/adani/entrance.jpg',
+    category: 'S+4 Approved Plots',
+    specs: '253 Sq. Yd. (2,277 Sq. Ft) · Stilt + 4 Floors · Gated Community · 60–90 Days Payment',
   },
   {
-    id: 'trevoc-lobby',
-    name: 'Grand Entrance Lobbies & 5-Tier Biometric Security',
-    location: 'Sector 56, Golf Course Road, Gurgaon',
-    image: '/images/trevoc/lobby.jpg',
-    category: 'Grand Arrival',
-    specs: 'Triple-Height Onyx Lobbies · Resident Elevators · 5-Level Parking',
+    id: 'adani-plots-267',
+    name: 'Adani Plots Sector 63 — 267 Sq. Yd. Corner / Park Facing',
+    location: 'Golf Extension Road, Sector 63, Gurugram',
+    image: '/images/adani/stilt_4.jpg',
+    category: 'Trophy Corner Plot',
+    specs: '267 Sq. Yd. (2,403 Sq. Ft) · Park Facing · Dual Road Width · S+4 Sanctioned',
   },
 ]
 export const projectCount = projects.length

@@ -30,4 +30,6 @@
   .btn-dark { @apply border-ink bg-ink hover:border-bronze hover:bg-bronze; }
   .field label { @apply mb-1.5 block text-[0.72rem] font-bold uppercase tracking-[0.14em] text-stone; }
   .field select, .field input, .field textarea { @apply w-full rounded-none border border-ink/15 bg-ivory px-3.5 py-3 text-base font-medium text-ink transition focus:border-bronze focus:outline-none focus:ring-4 focus:ring-bronze/20; }
+  .no-scrollbar::-webkit-scrollbar { display: none; }
+  .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }

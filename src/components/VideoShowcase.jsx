@@ -23,8 +23,18 @@ export const REAL_ESTATE_VIDEOS = [
       'Private High-Speed Biometric Elevator',
       'Championship Golf Course & City Views',
     ],
-    description:
-      'Experience an exclusive high-definition walkthrough of this ultra-luxury sky duplex penthouse on the coveted Golf Course Road corridor. Showcasing double-height ceilings, bespoke chandelier details, imported Italian marble finishes, wrap-around sunset deck, and 5-tier private security.',
+    description: `DETAILS - Experience premium living in Sushant Lok 1
+
+📍 Prime Connectivity
+✔️ Walking distance to HUDA City Centre Metro
+✔️ Near Palm County Club
+✔️ Easy access to Golf Course Road & Cyber City
+
+✨ Property Highlights
+▪️ 412 Sq. Yards | 4 BHK | 3rd Floor
+▪️ Gated Community
+▪️ 24×7 Security
+▪️ 100% Power Backup`,
     stats: [
       { label: 'Duration', value: '00:42 Seconds' },
       { label: 'Asset Type', value: 'Sky Duplex & Penthouse' },
@@ -517,7 +527,7 @@ export default function VideoShowcase() {
                     <h4 className="font-serif text-xl font-bold text-white mb-2">
                       Property &amp; Walkthrough Overview
                     </h4>
-                    <p className="text-sm leading-relaxed text-[#c6beb0]">
+                    <p className="text-sm leading-relaxed text-[#c6beb0] whitespace-pre-line">
                       {activeVideo.description}
                     </p>
                   </div>
@@ -540,21 +550,7 @@ export default function VideoShowcase() {
                   )}
 
                   {/* Architectural & Legal Specifications */}
-                  {activeVideo.specs && (
-                    <div className="rounded-xl border border-white/10 bg-[#1e1c18] p-4 sm:p-5">
-                      <h4 className="text-xs font-bold uppercase tracking-wider text-bronze-l mb-3">
-                        Architectural &amp; Legal Specifications
-                      </h4>
-                      <div className="grid grid-cols-1 sm:grid-cols-2 gap-x-8 gap-y-1.5 sm:gap-y-2 text-xs">
-                        {Object.entries(activeVideo.specs).map(([key, val]) => (
-                          <div key={key} className="flex flex-col sm:flex-row sm:items-center justify-between gap-0.5 sm:gap-2 border-b border-white/5 py-1.5 sm:py-2">
-                            <span className="capitalize text-white/50 font-medium shrink-0">{key.replace(/([A-Z])/g, ' $1')}:</span>
-                            <span className="font-semibold text-white text-left sm:text-right break-words">{val}</span>
-                          </div>
-                        ))}
-                      </div>
-                    </div>
-                  )}
+                  
 
                   {/* Direct Footer Actions: WhatsApp & Schedule Visit */}
                   <div className="flex flex-col sm:flex-row items-center justify-between gap-4 pt-4 border-t border-white/10">
@@ -629,7 +625,7 @@ export default function VideoShowcase() {
                   {/* Overview */}
                   <div>
                     <h4 className="font-serif text-lg font-bold text-white mb-1.5">Overview</h4>
-                    <p className="text-xs leading-relaxed text-[#c6beb0]">
+                    <p className="text-xs leading-relaxed text-[#c6beb0] whitespace-pre-line">
                       {activeVideo.description}
                     </p>
                   </div>
