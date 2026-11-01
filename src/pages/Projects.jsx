@@ -55,7 +55,7 @@ export default function Projects() {
   ], [])
 
   const sortOptions = useMemo(() => [
-    { value: 'price-asc', label: 'Starting Price: Low to High (Starting se High) ⚡', sublabel: 'Lowest starting rates first' },
+    { value: 'price-asc', label: 'Starting Price: Low to High ⚡', sublabel: 'Lowest starting rates first (Starting se High)' },
     { value: 'price-desc', label: 'Starting Price: High to Low', sublabel: 'Highest starting rates first' },
     { value: 'default', label: 'Default Curated Showcase', sublabel: 'Editorial priority showcase' },
   ], [])
@@ -220,7 +220,7 @@ export default function Projects() {
           </div>
 
           {/* 2. Real Estate Portal Project Filter Bar (Starting se High Price Range & Preferences) */}
-          <div className="mb-8 sm:mb-10 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)]">
+          <div className="mb-8 sm:mb-10 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] overflow-hidden">
             {/* Header: Title + Results Count + Clear Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink/10 pb-3 mb-4">
               <div>
@@ -327,7 +327,7 @@ export default function Projects() {
           {/* PROJECT 1: BPTP GREEN OAKS (Sector 70A, Gurgaon)              */}
           {/* ============================================================== */}
           {filteredProjects.some((p) => p.id === 'bptp') && (
-            <div id="project-bptp" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-bronze/40 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
+            <div id="project-bptp" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-bronze/40 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24 overflow-hidden">
               {/* Top Banner */}
               <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
@@ -507,8 +507,52 @@ export default function Projects() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-                  <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[560px] sm:min-w-0">
+                {/* Mobile Plot Cards (sm:hidden) - 100% Screen Fitted, No Horizontal Scroll */}
+                <div className="sm:hidden space-y-3">
+                  {BPTP_PLOTS_INFO.rates.map((row, idx) => (
+                    <div key={idx} className="rounded-xl border border-ink/10 bg-white p-3.5 shadow-2xs">
+                      <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-ink/5">
+                        <span className="font-bold text-xs text-ink">● {row.type}</span>
+                        <span className="rounded bg-emerald-100 text-emerald-800 px-2 py-0.5 text-[10px] font-bold">
+                          {row.facing}
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-[11px] mb-3">
+                        <div>
+                          <span className="text-stone block text-[10px]">Plot Size:</span>
+                          <span className="font-semibold text-ink">{row.size} ({row.sqft})</span>
+                        </div>
+                        <div>
+                          <span className="text-stone block text-[10px]">Rate / Sq. Yd:</span>
+                          <span className="font-bold text-bronze-d">{row.rate}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-ink/10">
+                        <div>
+                          <span className="text-stone block text-[9px] uppercase font-bold tracking-wider">Approx. Total</span>
+                          <span className="font-serif font-bold text-base text-ink">{row.priceDisplay}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => openBooking({
+                            id: `bptp-${idx}`,
+                            title: `BPTP Green Oaks — ${row.type}`,
+                            priceDisplay: row.priceDisplay,
+                            location: 'Sector 70A, Gurgaon',
+                            area: row.size,
+                          })}
+                          className="rounded-lg bg-ink px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-bronze transition shadow-xs cursor-pointer active:scale-95"
+                        >
+                          Book Visit
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table (hidden sm:block) */}
+                <div className="hidden sm:block overflow-x-auto w-full max-w-full">
+                  <table className="w-full text-left text-xs sm:text-sm border-collapse">
                     <thead>
                       <tr className="border-b-2 border-bronze/40 bg-sand/60 text-xs uppercase tracking-wider text-ink font-bold">
                         <th className="py-2.5 sm:py-3 px-3 sm:px-4">Plot Option</th>
@@ -596,7 +640,7 @@ export default function Projects() {
           {/* PROJECT 2: ADANI PLOTS (Sector 63, Golf Extension Road)       */}
           {/* ============================================================== */}
           {filteredProjects.some((p) => p.id === 'adani') && (
-            <div id="project-adani" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-blue-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
+            <div id="project-adani" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-blue-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24 overflow-hidden">
               {/* Top Banner */}
               <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
@@ -776,8 +820,52 @@ export default function Projects() {
                   </div>
                 </div>
 
-                <div className="overflow-x-auto no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-                  <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[580px] sm:min-w-0">
+                {/* Mobile Plot Cards (sm:hidden) */}
+                <div className="sm:hidden space-y-3">
+                  {ADANI_PLOTS_INFO.rates.map((row, idx) => (
+                    <div key={idx} className="rounded-xl border border-ink/10 bg-white p-3.5 shadow-2xs">
+                      <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-ink/5">
+                        <span className="font-bold text-xs text-ink">{row.size}</span>
+                        <span className="rounded bg-blue-100 text-blue-900 px-2 py-0.5 text-[10px] font-bold">
+                          S+4 Approved
+                        </span>
+                      </div>
+                      <div className="grid grid-cols-2 gap-2 text-[11px] mb-3">
+                        <div>
+                          <span className="text-stone block text-[10px]">Approx Area:</span>
+                          <span className="font-semibold text-ink">{row.sqft}</span>
+                        </div>
+                        <div>
+                          <span className="text-stone block text-[10px]">Rate / Sq. Yd:</span>
+                          <span className="font-bold text-bronze-d">{row.rate}</span>
+                        </div>
+                      </div>
+                      <div className="flex items-center justify-between pt-2 border-t border-ink/10">
+                        <div>
+                          <span className="text-stone block text-[9px] uppercase font-bold tracking-wider">Total Value</span>
+                          <span className="font-serif font-bold text-base text-ink">{row.priceDisplay}</span>
+                        </div>
+                        <button
+                          type="button"
+                          onClick={() => openBooking({
+                            id: `adani-${idx}`,
+                            title: `Adani Plots — ${row.size}`,
+                            priceDisplay: row.priceDisplay,
+                            location: 'Golf Extension Road, Sector 63, Gurugram',
+                            area: row.size,
+                          })}
+                          className="rounded-lg bg-ink px-3.5 py-2 text-xs font-bold uppercase tracking-wider text-white hover:bg-bronze transition shadow-xs cursor-pointer active:scale-95"
+                        >
+                          Book Visit
+                        </button>
+                      </div>
+                    </div>
+                  ))}
+                </div>
+
+                {/* Desktop Table (hidden sm:block) */}
+                <div className="hidden sm:block overflow-x-auto w-full max-w-full">
+                  <table className="w-full text-left text-xs sm:text-sm border-collapse">
                     <thead>
                       <tr className="border-b-2 border-bronze/40 bg-sand/60 text-xs uppercase tracking-wider text-ink font-bold">
                         <th className="py-2.5 sm:py-3 px-3 sm:px-4">Plot Size</th>
@@ -834,7 +922,7 @@ export default function Projects() {
           {/* PROJECT 3: TREVOC ROYAL RESIDENCES (Sector 56)                 */}
           {/* ============================================================== */}
           {filteredProjects.some((p) => p.id === 'trevoc') && (
-            <div id="project-trevoc" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-purple-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
+            <div id="project-trevoc" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-purple-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24 overflow-hidden">
               {/* Top Banner */}
               <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
                 <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
@@ -1196,7 +1284,7 @@ export default function Projects() {
           )}
 
           {/* 4. Side-by-Side Comparison Matrix */}
-          <div className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-bronze/30 bg-white p-4 sm:p-7 md:p-10 shadow-lg">
+          <div className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-bronze/30 bg-white p-4 sm:p-7 md:p-10 shadow-lg overflow-hidden">
             <div className="mb-4 sm:mb-6 flex flex-col sm:flex-row sm:items-end sm:justify-between gap-2 sm:gap-4">
               <div className="max-w-2xl">
                 <span className="kicker !mb-1 text-bronze">Comparative Analysis</span>
@@ -1212,8 +1300,81 @@ export default function Projects() {
               </span>
             </div>
 
-            <div className="overflow-x-auto no-scrollbar -mx-2 px-2 sm:mx-0 sm:px-0">
-              <table className="w-full text-left text-xs sm:text-sm border-collapse min-w-[640px] sm:min-w-0">
+            {/* Mobile Comparison Cards (sm:hidden) */}
+            <div className="sm:hidden space-y-3">
+              {[
+                {
+                  name: 'BPTP Green Oaks',
+                  tag: 'Only 2 Plots',
+                  tagBg: 'bg-emerald-100 text-emerald-800',
+                  loc: 'Sector 70A, Gurgaon',
+                  type: 'Residential Plots (East-Facing)',
+                  sizes: '137 Sq. Yds. (1,233 Sq. Ft)',
+                  price: '₹4.11 Cr - ₹4.45 Cr',
+                  id: 'bptp',
+                },
+                {
+                  name: 'Adani Plots',
+                  tag: 'S+4 Approved',
+                  tagBg: 'bg-blue-100 text-blue-900',
+                  loc: 'Sector 63, Golf Ext. Rd',
+                  type: 'Residential Plots (S+4 Approved)',
+                  sizes: '170, 253 & 267 Sq. Yd.',
+                  price: '₹5.10 Cr - ₹8.81 Cr',
+                  id: 'adani',
+                },
+                {
+                  name: 'TREVOC Royal Residences',
+                  tag: 'Club Royal & Skydeck',
+                  tagBg: 'bg-purple-100 text-purple-950',
+                  loc: 'Sector 56, Golf Course Rd',
+                  type: 'Luxury Sky Residences',
+                  sizes: '3 & 4 BHK + Utility (2,642 - 3,380 Sq.Ft)',
+                  price: '₹6.60 Cr - ₹8.45+ Cr',
+                  id: 'trevoc',
+                },
+              ].map((proj) => (
+                <div key={proj.id} className="rounded-xl border border-ink/10 bg-white p-3.5 shadow-2xs">
+                  <div className="flex items-center justify-between gap-2 mb-2 pb-2 border-b border-ink/5">
+                    <span className="font-bold text-xs text-ink">{proj.name}</span>
+                    <span className={`rounded ${proj.tagBg} px-2 py-0.5 text-[10px] font-bold`}>
+                      {proj.tag}
+                    </span>
+                  </div>
+                  <div className="space-y-1.5 text-[11px] mb-3">
+                    <div className="flex justify-between">
+                      <span className="text-stone">Location:</span>
+                      <span className="font-semibold text-ink text-right">{proj.loc}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone">Asset Type:</span>
+                      <span className="font-semibold text-ink text-right">{proj.type}</span>
+                    </div>
+                    <div className="flex justify-between">
+                      <span className="text-stone">Sizes:</span>
+                      <span className="font-semibold text-stone text-right">{proj.sizes}</span>
+                    </div>
+                  </div>
+                  <div className="flex items-center justify-between pt-2 border-t border-ink/10">
+                    <div>
+                      <span className="text-stone block text-[9px] uppercase font-bold tracking-wider">Pricing Range</span>
+                      <span className="font-serif font-bold text-base text-bronze-d">{proj.price}</span>
+                    </div>
+                    <button
+                      type="button"
+                      onClick={() => setActiveProject(proj.id)}
+                      className="rounded-lg bg-ink px-3.5 py-1.5 text-xs font-bold uppercase text-white hover:bg-bronze transition cursor-pointer active:scale-95"
+                    >
+                      Explore
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {/* Desktop Table (hidden sm:block) */}
+            <div className="hidden sm:block overflow-x-auto w-full max-w-full">
+              <table className="w-full text-left text-xs sm:text-sm border-collapse">
                 <thead>
                   <tr className="border-b-2 border-bronze/40 bg-sand/60 text-xs uppercase tracking-wider text-ink font-bold">
                     <th className="py-2.5 sm:py-3 px-3 sm:px-4">Project</th>

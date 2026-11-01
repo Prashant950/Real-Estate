@@ -66,7 +66,7 @@ export default function Properties() {
   ], [])
 
   const sortOptions = useMemo(() => [
-    { value: 'price-asc', label: 'Price: Low to High (Starting se High) ⚡', sublabel: 'Lowest starting rates first' },
+    { value: 'price-asc', label: 'Price: Low to High ⚡', sublabel: 'Lowest starting rates first (Starting se High)' },
     { value: 'price-desc', label: 'Price: High to Low (High se Low)', sublabel: 'Highest trophy residences first' },
     { value: 'featured', label: 'Featured / Verified First', sublabel: 'Curated priority order' },
   ], [])
@@ -175,7 +175,7 @@ export default function Properties() {
           </div>
 
           {/* 2. Real Estate Portal Filter Suite (Starting se High Range & Quick Interactive Filters) */}
-          <div className="mb-6 sm:mb-8 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)]">
+          <div className="mb-6 sm:mb-8 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)] overflow-hidden">
             {/* Header: Title + Results Count + Clear Button */}
             <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink/10 pb-3 mb-4">
               <div>

@@ -14,14 +14,15 @@
 }
 
 @layer base {
-  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; }
-  body { @apply bg-ivory text-ink font-sans antialiased overflow-x-hidden leading-relaxed; }
+  html { scroll-behavior: smooth; -webkit-text-size-adjust: 100%; max-width: 100%; overflow-x: hidden; }
+  body { @apply bg-ivory text-ink font-sans antialiased leading-relaxed; max-width: 100%; overflow-x: hidden; }
+  #root { max-width: 100%; overflow-x: hidden; }
   h1, h2, h3, h4 { @apply font-serif font-semibold leading-[1.1] tracking-tight; }
   :focus-visible { outline: 2px solid var(--color-bronze); outline-offset: 3px; }
 }
 
 @layer components {
-  .wrap { @apply mx-auto w-[min(1240px,100%-40px)]; }
+  .wrap { @apply mx-auto w-[min(1240px,calc(100%-24px))] sm:w-[min(1240px,calc(100%-40px))]; }
   .section { @apply py-8 md:py-12 lg:py-14; }
   .kicker { @apply mb-3 block text-[0.78rem] font-bold uppercase tracking-[0.18em] text-bronze; }
   .h2 { @apply text-[clamp(2rem,4vw,3.2rem)] mb-4; }

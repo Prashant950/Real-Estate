@@ -61,7 +61,7 @@ export default function CustomSelect({
   }
 
   return (
-    <div ref={dropdownRef} className={`relative w-full ${className}`}>
+    <div ref={dropdownRef} className={`relative w-full min-w-0 ${className}`}>
       {label && (
         <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1 truncate">
           {label}
@@ -74,9 +74,9 @@ export default function CustomSelect({
         onClick={() => setIsOpen(!isOpen)}
         aria-haspopup="listbox"
         aria-expanded={isOpen}
-        className="w-full flex items-center justify-between gap-2 rounded-xl border border-ink/15 bg-sand/20 px-3.5 py-2.5 text-xs text-ink font-medium transition hover:border-bronze focus:border-bronze focus:bg-white focus:outline-none cursor-pointer text-left shadow-2xs min-h-[42px]"
+        className="w-full min-w-0 flex items-center justify-between gap-2 rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium transition hover:border-bronze focus:border-bronze focus:bg-white focus:outline-none cursor-pointer text-left shadow-2xs min-h-[42px]"
       >
-        <span className="truncate max-w-[calc(100%-20px)]">
+        <span className="truncate min-w-0 flex-1 block">
           {selectedOption ? selectedOption.label : placeholder}
         </span>
         <svg
