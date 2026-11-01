@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/CtaBand'
+import CustomSelect from '../components/CustomSelect'
 import { Arrow, WhatsAppIcon, CalendarBookIcon } from '../components/Icons'
 import PageBanner from '../components/PageBanner'
 import Reveal from '../components/Reveal'
@@ -48,6 +49,27 @@ export default function Properties() {
     { src: '/images/adani/entrance.jpg', title: 'Grand 24x7 Security Entrance Gatehouse' },
     { src: '/images/adani/stilt_4.jpg', title: 'S+4 Ready-to-Construct Avenue & Green Parks' },
   ]
+
+  // Filter Dropdown Options for Custom Luxury Selector (Desktop Dropdown + Mobile Bottom Sheet)
+  const projectOptions = useMemo(() => [
+    { value: 'all', label: `All Developments (${properties.length} Properties)`, sublabel: 'BPTP, TREVOC & Adani Enclaves' },
+    { value: 'bptp', label: 'BPTP Green Oaks (Sector 70A)', sublabel: '137 Sq. Yd. East-Facing Plots' },
+    { value: 'trevoc', label: 'TREVOC Royal Residences (Sector 56)', sublabel: '3 & 4 BHK Sky Residences from 80 Ft' },
+    { value: 'adani', label: 'Adani Plots (Sector 63)', sublabel: 'S+4 Approved Plots adjacent DLF The Arbour' },
+  ], [properties.length])
+
+  const budgetOptions = useMemo(() => [
+    { value: 'all', label: 'All Budgets (₹4.11 Cr – ₹8.81 Cr)', sublabel: 'View all verified residential inventory' },
+    { value: 'under-5', label: 'Starting Range: Under ₹5.00 Cr', sublabel: 'BPTP Green Oaks Plots (~₹4.11 Cr & ₹4.45 Cr)' },
+    { value: '5-7', label: 'Mid-Tier Range: ₹5.00 Cr – ₹7.00 Cr', sublabel: 'Adani 170 Yd (₹5.10 Cr) & TREVOC 3 BHK (₹6.60 Cr)' },
+    { value: '7-plus', label: 'Ultra-Luxury: Above ₹7.00 Cr', sublabel: 'Adani 253/267 Yd & TREVOC 4 BHK Residences' },
+  ], [])
+
+  const sortOptions = useMemo(() => [
+    { value: 'price-asc', label: 'Price: Low to High (Starting se High) ⚡', sublabel: 'Lowest starting rates first' },
+    { value: 'price-desc', label: 'Price: High to Low (High se Low)', sublabel: 'Highest trophy residences first' },
+    { value: 'featured', label: 'Featured / Verified First', sublabel: 'Curated priority order' },
+  ], [])
 
   // Filter & Sort calculation (Real Estate Portal Pattern)
   const displayedProperties = useMemo(() => {
@@ -208,57 +230,31 @@ export default function Properties() {
               </div>
 
               {/* 2. Development / Project */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Development / Project
-                </label>
-                <select
-                  value={selectedProject}
-                  onChange={(e) => {
-                    setSelectedProject(e.target.value)
-                    if (e.target.value !== 'all') setActiveSpotlightProject(e.target.value)
-                  }}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="all">All Developments ({properties.length} Properties)</option>
-                  <option value="bptp">BPTP Green Oaks (Sector 70A)</option>
-                  <option value="trevoc">TREVOC Royal Residences (Sector 56)</option>
-                  <option value="adani">Adani Plots (Sector 63)</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Development / Project"
+                value={selectedProject}
+                onChange={(val) => {
+                  setSelectedProject(val)
+                  if (val !== 'all') setActiveSpotlightProject(val)
+                }}
+                options={projectOptions}
+              />
 
               {/* 3. Budget / Price Range ("Starting se High") */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Price Range (Starting se High)
-                </label>
-                <select
-                  value={budgetRange}
-                  onChange={(e) => setBudgetRange(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="all">All Budgets (₹4.11 Cr – ₹8.81 Cr)</option>
-                  <option value="under-5">Starting Range: Under ₹5.00 Cr (BPTP Plots)</option>
-                  <option value="5-7">Mid-Tier Range: ₹5.00 Cr – ₹7.00 Cr (Adani 170 &amp; TREVOC 3BHK)</option>
-                  <option value="7-plus">Ultra-Luxury: Above ₹7.00 Cr (4 BHK &amp; Large Plots)</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Price Range (Starting se High)"
+                value={budgetRange}
+                onChange={setBudgetRange}
+                options={budgetOptions}
+              />
 
               {/* 4. Sort By: Starting se High */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Sort Order
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="price-asc">Price: Low to High (Starting se High) ⚡</option>
-                  <option value="price-desc">Price: High to Low (High se Low)</option>
-                  <option value="featured">Featured / Verified First</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Sort Order"
+                value={sortBy}
+                onChange={setSortBy}
+                options={sortOptions}
+              />
             </div>
 
            

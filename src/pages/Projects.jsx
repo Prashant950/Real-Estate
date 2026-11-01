@@ -1,6 +1,7 @@
 import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/CtaBand'
+import CustomSelect from '../components/CustomSelect'
 import { Arrow, WhatsAppIcon, CalendarBookIcon } from '../components/Icons'
 import PageBanner from '../components/PageBanner'
 import Reveal from '../components/Reveal'
@@ -31,6 +32,33 @@ export default function Projects() {
   // Backward compatibility alias for any child click
   const activeProject = selectedProject
   const setActiveProject = setSelectedProject
+
+  // Dropdown Options for Custom Luxury Selector (Desktop Floating + Mobile Bottom Sheet)
+  const projectOptions = useMemo(() => [
+    { value: 'all', label: 'All 3 Premier Projects', sublabel: 'BPTP, Adani Plots & TREVOC Residences' },
+    { value: 'bptp', label: 'BPTP Green Oaks (Sector 70A)', sublabel: 'Starting approx. ₹4.11 Cr · 137 Sq. Yd.' },
+    { value: 'adani', label: 'Adani Plots (Sector 63)', sublabel: 'Starting ₹5.10 Cr · S+4 Ready' },
+    { value: 'trevoc', label: 'TREVOC Royal Residences (Sector 56)', sublabel: 'Starting ₹6.60 Cr · 3 & 4 BHK' },
+  ], [])
+
+  const budgetOptions = useMemo(() => [
+    { value: 'all', label: 'All Ranges (₹4.11 Cr – ₹8.81 Cr)', sublabel: 'View all projects portfolio' },
+    { value: 'under-5', label: 'Starting Range: Under ₹5.00 Cr', sublabel: 'BPTP Green Oaks Plots (~₹4.11 Cr)' },
+    { value: '5-6.5', label: 'Starting Range: ₹5.00 Cr – ₹6.50 Cr', sublabel: 'Adani Sector 63 Plots (₹5.10 Cr)' },
+    { value: 'above-6.5', label: 'Starting Range: Above ₹6.50 Cr', sublabel: 'TREVOC Royal Sky Residences (₹6.60 Cr)' },
+  ], [])
+
+  const typeOptions = useMemo(() => [
+    { value: 'all', label: 'All Types (Plots & Residences)', sublabel: 'Plotted enclaves & high-rise towers' },
+    { value: 'plots', label: 'Plotted Communities', sublabel: 'BPTP Green Oaks & Adani Sector 63' },
+    { value: 'apartments', label: 'Luxury Sky Residences', sublabel: 'TREVOC Royal Residences Sector 56' },
+  ], [])
+
+  const sortOptions = useMemo(() => [
+    { value: 'price-asc', label: 'Starting Price: Low to High (Starting se High) ⚡', sublabel: 'Lowest starting rates first' },
+    { value: 'price-desc', label: 'Starting Price: High to Low', sublabel: 'Highest starting rates first' },
+    { value: 'default', label: 'Default Curated Showcase', sublabel: 'Editorial priority showcase' },
+  ], [])
 
   const projectsMetadata = useMemo(() => [
     {
@@ -222,70 +250,36 @@ export default function Projects() {
             {/* Core Project Filter Dropdowns: Responsive 4-Column Grid */}
             <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-4">
               {/* 1. Development Selector */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Active Development
-                </label>
-                <select
-                  value={selectedProject}
-                  onChange={(e) => setSelectedProject(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="all">All 3 Premier Projects</option>
-                  <option value="bptp">BPTP Green Oaks (Sector 70A)</option>
-                  <option value="adani">Adani Plots (Sector 63)</option>
-                  <option value="trevoc">TREVOC Royal (Sector 56)</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Active Development"
+                value={selectedProject}
+                onChange={setSelectedProject}
+                options={projectOptions}
+              />
 
               {/* 2. Starting Price Range ("Starting se High") */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Starting Price Range
-                </label>
-                <select
-                  value={budgetRange}
-                  onChange={(e) => setBudgetRange(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="all">All Ranges (₹4.11 Cr – ₹8.81 Cr)</option>
-                  <option value="under-5">Starting &lt; ₹5.00 Cr (BPTP Plots: ₹4.11 Cr)</option>
-                  <option value="5-6.5">Starting ₹5.00 Cr – ₹6.50 Cr (Adani: ₹5.10 Cr)</option>
-                  <option value="above-6.5">Starting Above ₹6.50 Cr (TREVOC: ₹6.60 Cr)</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Starting Price Range"
+                value={budgetRange}
+                onChange={setBudgetRange}
+                options={budgetOptions}
+              />
 
               {/* 3. Development Type */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Asset Classification
-                </label>
-                <select
-                  value={selectedType}
-                  onChange={(e) => setSelectedType(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="all">All Types (Plots &amp; Residences)</option>
-                  <option value="plots">Plotted Communities (BPTP &amp; Adani)</option>
-                  <option value="apartments">Luxury Sky Residences (TREVOC)</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Asset Classification"
+                value={selectedType}
+                onChange={setSelectedType}
+                options={typeOptions}
+              />
 
               {/* 4. Sort By: Starting se High */}
-              <div>
-                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
-                  Sort Order
-                </label>
-                <select
-                  value={sortBy}
-                  onChange={(e) => setSortBy(e.target.value)}
-                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
-                >
-                  <option value="price-asc">Starting Price: Low to High ⚡</option>
-                  <option value="price-desc">Starting Price: High to Low</option>
-                  <option value="default">Default Curated Showcase</option>
-                </select>
-              </div>
+              <CustomSelect
+                label="Sort Order"
+                value={sortBy}
+                onChange={setSortBy}
+                options={sortOptions}
+              />
             </div>
 
             
