@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/CtaBand'
 import { Arrow, WhatsAppIcon, CalendarBookIcon } from '../components/Icons'
@@ -21,7 +21,105 @@ export default function Projects() {
   )
 
   const { openBooking, openDetails } = useProperties()
-  const [activeProject, setActiveProject] = useState('all') // 'all' | 'bptp' | 'adani' | 'trevoc'
+
+  // Real Estate Filter States for Projects
+  const [selectedProject, setSelectedProject] = useState('all') // 'all' | 'bptp' | 'adani' | 'trevoc'
+  const [budgetRange, setBudgetRange] = useState('all') // 'all' | 'under-5' | '5-6.5' | 'above-6.5'
+  const [selectedType, setSelectedType] = useState('all') // 'all' | 'plots' | 'apartments'
+  const [sortBy, setSortBy] = useState('price-asc') // 'price-asc' (Starting se High) | 'price-desc' | 'default'
+
+  // Backward compatibility alias for any child click
+  const activeProject = selectedProject
+  const setActiveProject = setSelectedProject
+
+  const projectsMetadata = useMemo(() => [
+    {
+      id: 'bptp',
+      name: 'BPTP Green Oaks',
+      location: 'Sector 70A, Gurgaon',
+      type: 'plots',
+      typeName: 'Residential Plots',
+      startingPrice: 41100000,
+      startingPriceDisplay: '₹4.11 Cr',
+      priceRangeDisplay: '₹4.11 Cr – ₹4.45 Cr',
+      rateDisplay: '₹3.00 Lakh / Sq. Yd.',
+      tag: 'ONLY 2 PLOTS',
+      tagColor: 'emerald',
+    },
+    {
+      id: 'adani',
+      name: 'Adani Plots',
+      location: 'Sector 63, Golf Extension Road',
+      type: 'plots',
+      typeName: 'Residential Plots (S+4 Approved)',
+      startingPrice: 51000000,
+      startingPriceDisplay: '₹5.10 Cr',
+      priceRangeDisplay: '₹5.10 Cr – ₹8.81 Cr',
+      rateDisplay: '₹3.00 Lakh / Sq. Yd.',
+      tag: 'S+4 APPROVED',
+      tagColor: 'blue',
+    },
+    {
+      id: 'trevoc',
+      name: 'TREVOC Royal Residences',
+      location: 'Sector 56, Golf Course Road',
+      type: 'apartments',
+      typeName: 'Luxury Sky Residences',
+      startingPrice: 66000000,
+      startingPriceDisplay: '₹6.60 Cr',
+      priceRangeDisplay: '₹6.60 Cr – ₹8.45 Cr+',
+      rateDisplay: 'Elevated 80 Ft Podium',
+      tag: '3 & 4 BHK + UTILITY',
+      tagColor: 'purple',
+    },
+  ], [])
+
+  const filteredProjects = useMemo(() => {
+    let list = [...projectsMetadata]
+
+    // 1. Project selection
+    if (selectedProject !== 'all') {
+      list = list.filter((p) => p.id === selectedProject)
+    }
+
+    // 2. Asset Type
+    if (selectedType === 'plots') {
+      list = list.filter((p) => p.type === 'plots')
+    } else if (selectedType === 'apartments') {
+      list = list.filter((p) => p.type === 'apartments')
+    }
+
+    // 3. Price / Budget Range (Starting se High)
+    if (budgetRange === 'under-5') {
+      list = list.filter((p) => p.startingPrice <= 50000000)
+    } else if (budgetRange === '5-6.5') {
+      list = list.filter((p) => p.startingPrice >= 45000000 && p.startingPrice <= 65000000)
+    } else if (budgetRange === 'above-6.5') {
+      list = list.filter((p) => p.startingPrice >= 65000000)
+    }
+
+    // 4. Sort by Starting Price
+    list.sort((a, b) => {
+      if (sortBy === 'price-asc') return a.startingPrice - b.startingPrice // Starting se High
+      if (sortBy === 'price-desc') return b.startingPrice - a.startingPrice // High to Low
+      return 0
+    })
+
+    return list
+  }, [projectsMetadata, selectedProject, selectedType, budgetRange, sortBy])
+
+  const resetFilters = () => {
+    setSelectedProject('all')
+    setBudgetRange('all')
+    setSelectedType('all')
+    setSortBy('price-asc')
+  }
+
+  const hasActiveFilters =
+    selectedProject !== 'all' ||
+    budgetRange !== 'all' ||
+    selectedType !== 'all' ||
+    sortBy !== 'price-asc'
 
   // Gallery states for each project
   const [bptpImgIdx, setBptpImgIdx] = useState(0)
@@ -81,119 +179,194 @@ export default function Projects() {
               </div>
 
               {/* RERA & Connectivity Badge */}
-              <div className="flex flex-wrap items-center gap-2 shrink-0">
-                <span className="rounded-lg border border-bronze/30 bg-white px-3 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-xs font-bold text-ink shadow-xs">
-                  🏛️ 3 Active Developments
+              <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center shrink-0">
+                <span className="rounded-xl border border-bronze/30 bg-white px-3 py-2 text-[11px] sm:text-xs font-bold text-ink shadow-xs text-center flex items-center justify-center gap-1.5">
+                  <span>🏛️</span>
+                  <span>3 Active Projects</span>
                 </span>
-                <span className="rounded-lg bg-emerald-700 px-3 py-1.5 sm:px-3.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs">
+                <span className="rounded-xl bg-emerald-700 px-3 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs text-center flex items-center justify-center">
                   100% Verified Titles
                 </span>
               </div>
             </div>
           </div>
 
-          {/* 2. Interactive Project Selector Tab Bar (Fitted within Mobile Screen - No Horizontal Scroll) */}
-          <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-ink/10 pb-3">
-            <div className="grid grid-cols-2 gap-2 w-full md:flex md:flex-wrap md:items-center md:w-auto md:gap-2">
-              <button
-                type="button"
-                onClick={() => setActiveProject('all')}
-                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                  activeProject === 'all'
-                    ? 'bg-ink text-white shadow-md'
-                    : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
-                }`}
-              >
-                <span className="truncate max-w-full">All 3 Projects</span>
-                <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold ${activeProject === 'all' ? 'bg-bronze text-white' : 'bg-sand text-ink'}`}>
-                  3
+          {/* 2. Real Estate Portal Project Filter Bar (Starting se High Price Range & Preferences) */}
+          <div className="mb-8 sm:mb-10 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)]">
+            {/* Header: Title + Results Count + Clear Button */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink/10 pb-3 mb-4">
+              <div>
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-bronze block">
+                  REAL ESTATE PROJECT FINDER
                 </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveProject('bptp')}
-                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                  activeProject === 'bptp'
-                    ? 'bg-bronze text-white shadow-md'
-                    : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
-                }`}
-              >
-                <span className="truncate max-w-full">BPTP Green Oaks</span>
-                <span className="rounded-full bg-emerald-600 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                  ONLY 2 PLOTS
+                <h2 className="font-serif text-lg sm:text-xl font-bold text-ink">
+                  Filter Projects by Starting Price &amp; Development
+                </h2>
+              </div>
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-sand/70 px-3 py-1 text-xs font-bold text-ink border border-ink/10">
+                  {filteredProjects.length} Projects Match
                 </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveProject('adani')}
-                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                  activeProject === 'adani'
-                    ? 'bg-bronze text-white shadow-md'
-                    : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
-                }`}
-              >
-                <span className="truncate max-w-full">Adani Plots</span>
-                <span className="rounded-full bg-blue-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                  S+4 APPROVED
-                </span>
-              </button>
-
-              <button
-                type="button"
-                onClick={() => setActiveProject('trevoc')}
-                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                  activeProject === 'trevoc'
-                    ? 'bg-bronze text-white shadow-md'
-                    : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
-                }`}
-              >
-                <span className="truncate max-w-full">TREVOC Royal</span>
-                <span className="rounded-full bg-purple-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                  3 &amp; 4 BHK
-                </span>
-              </button>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="text-xs font-bold text-red-600 hover:text-red-700 underline cursor-pointer"
+                  >
+                    Reset All
+                  </button>
+                )}
+              </div>
             </div>
 
-            <Link
-              to="/properties"
-              className="inline-flex items-center gap-1.5 text-xs font-bold uppercase tracking-wider text-bronze-d hover:text-ink transition-colors shrink-0 self-start md:self-auto pt-1 md:pt-0"
-            >
-              <span>View Property Inventory</span>
-              <Arrow />
-            </Link>
+            {/* Core Project Filter Dropdowns: Responsive 4-Column Grid */}
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+              {/* 1. Development Selector */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Active Development
+                </label>
+                <select
+                  value={selectedProject}
+                  onChange={(e) => setSelectedProject(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All 3 Premier Projects</option>
+                  <option value="bptp">BPTP Green Oaks (Sector 70A)</option>
+                  <option value="adani">Adani Plots (Sector 63)</option>
+                  <option value="trevoc">TREVOC Royal (Sector 56)</option>
+                </select>
+              </div>
+
+              {/* 2. Starting Price Range ("Starting se High") */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Starting Price Range
+                </label>
+                <select
+                  value={budgetRange}
+                  onChange={(e) => setBudgetRange(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Ranges (₹4.11 Cr – ₹8.81 Cr)</option>
+                  <option value="under-5">Starting &lt; ₹5.00 Cr (BPTP Plots: ₹4.11 Cr)</option>
+                  <option value="5-6.5">Starting ₹5.00 Cr – ₹6.50 Cr (Adani: ₹5.10 Cr)</option>
+                  <option value="above-6.5">Starting Above ₹6.50 Cr (TREVOC: ₹6.60 Cr)</option>
+                </select>
+              </div>
+
+              {/* 3. Development Type */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Asset Classification
+                </label>
+                <select
+                  value={selectedType}
+                  onChange={(e) => setSelectedType(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Types (Plots &amp; Residences)</option>
+                  <option value="plots">Plotted Communities (BPTP &amp; Adani)</option>
+                  <option value="apartments">Luxury Sky Residences (TREVOC)</option>
+                </select>
+              </div>
+
+              {/* 4. Sort By: Starting se High */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Sort Order
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="price-asc">Starting Price: Low to High ⚡</option>
+                  <option value="price-desc">Starting Price: High to Low</option>
+                  <option value="default">Default Curated Showcase</option>
+                </select>
+              </div>
+            </div>
+
+            
+
+            {/* Active Filters Summary Strip */}
+            {hasActiveFilters && (
+              <div className="mt-3 pt-3 border-t border-ink/10 flex flex-wrap items-center gap-1.5 text-xs">
+                <span className="text-[11px] text-stone font-semibold">Active:</span>
+                {selectedProject !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink capitalize">
+                    Project: {selectedProject}
+                    <button type="button" onClick={() => setSelectedProject('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {budgetRange !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink">
+                    Range: {budgetRange === 'under-5' ? '< ₹5 Cr' : budgetRange === '5-6.5' ? '₹5–₹6.5 Cr' : '> ₹6.5 Cr'}
+                    <button type="button" onClick={() => setBudgetRange('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {selectedType !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink capitalize">
+                    Type: {selectedType}
+                    <button type="button" onClick={() => setSelectedType('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {sortBy !== 'price-asc' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink">
+                    Sort: {sortBy === 'price-desc' ? 'High to Low' : 'Curated'}
+                    <button type="button" onClick={() => setSortBy('price-asc')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-[11px] text-bronze-d hover:text-ink font-bold ml-1 cursor-pointer underline"
+                >
+                  Clear all
+                </button>
+              </div>
+            )}
           </div>
 
           {/* ============================================================== */}
           {/* PROJECT 1: BPTP GREEN OAKS (Sector 70A, Gurgaon)              */}
           {/* ============================================================== */}
-          {(activeProject === 'all' || activeProject === 'bptp') && (
+          {filteredProjects.some((p) => p.id === 'bptp') && (
             <div id="project-bptp" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-bronze/40 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
               {/* Top Banner */}
-              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4 sm:pb-5">
-                <div>
-                  <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 rounded-full bg-emerald-50 border border-emerald-300 px-2.5 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold text-emerald-800 uppercase tracking-wider mb-2">
-                    <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse" />
-                    <span>Plotted Community · Sector 70A, Gurgaon</span>
-                    <span className="hidden sm:inline">·</span>
-                    <span className="hidden sm:inline">1% Commission Committed</span>
+              <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-emerald-800 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">Plotted Community · Sector 70A, Gurgaon</span>
+                    </div>
+                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink leading-tight">
+                      BPTP GREEN OAKS — Sector 70A
+                    </h2>
+                    {/* Starting Price Range Badge Banner */}
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                      <span className="rounded-lg bg-emerald-800 text-white font-bold px-3 py-1 text-xs sm:text-sm shadow-xs">
+                        Starting from Approx. ₹4.11 Cr
+                      </span>
+                      <span className="rounded-lg bg-sand border border-ink/10 text-ink font-semibold px-2.5 py-1 text-xs">
+                        Price Range: ₹4.11 Cr – ₹4.45 Cr (₹3.00 L / Sq. Yd.)
+                      </span>
+                    </div>
+                    <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-2 max-w-[72ch]">
+                      Premium residential plots located in Sector 70A, Gurgaon. Gated society featuring resident club house, huge park, and seamless connectivity to SPR, Golf Course Extension Road, Sohna Road, and NH-48.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink">
-                    BPTP GREEN OAKS — Sector 70A
-                  </h2>
-                  <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-1">
-                    Premium residential plots located in Sector 70A, Gurgaon. Gated society featuring resident club house, huge park, and seamless connectivity to SPR, Golf Course Extension Road, Sohna Road, and NH-48.
-                  </p>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-2 shrink-0">
-                  <span className="rounded-lg sm:rounded-xl bg-emerald-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow">
-                    Only 2 Plots Available
-                  </span>
-                  <span className="rounded-lg sm:rounded-xl bg-amber-100 text-amber-900 border border-amber-300 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold">
-                    East-Facing Plots
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-emerald-700 text-white px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-xs">
+                      Only 2 Plots Available
+                    </span>
+                    <span className="rounded-lg bg-amber-100 text-amber-900 border border-amber-300 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold shadow-xs">
+                      East-Facing Plots
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -428,32 +601,41 @@ export default function Projects() {
           {/* ============================================================== */}
           {/* PROJECT 2: ADANI PLOTS (Sector 63, Golf Extension Road)       */}
           {/* ============================================================== */}
-          {(activeProject === 'all' || activeProject === 'adani') && (
+          {filteredProjects.some((p) => p.id === 'adani') && (
             <div id="project-adani" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-blue-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
               {/* Top Banner */}
-              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4 sm:pb-5">
-                <div>
-                  <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 rounded-full bg-blue-50 border border-blue-300 px-2.5 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold text-blue-900 uppercase tracking-wider mb-2">
-                    <span className="h-2 w-2 rounded-full bg-blue-700 animate-pulse" />
-                    <span>Plotted Enclave · Sector 63, Golf Extension Road</span>
-                    <span className="hidden sm:inline">·</span>
-                    <span className="hidden sm:inline">Adjacent to DLF The Arbour</span>
+              <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-blue-900 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-blue-700 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">Plotted Enclave · Sector 63, Golf Extension Road</span>
+                    </div>
+                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink leading-tight">
+                      ADANI PLOTS — Sector 63, Gurugram
+                    </h2>
+                    {/* Starting Price Range Badge Banner */}
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                      <span className="rounded-lg bg-blue-900 text-blue-100 font-bold px-3 py-1 text-xs sm:text-sm shadow-xs">
+                        Starting from ₹5.10 Crore
+                      </span>
+                      <span className="rounded-lg bg-sand border border-ink/10 text-ink font-semibold px-2.5 py-1 text-xs">
+                        Price Range: ₹5.10 Cr – ₹8.81 Cr (₹3.00 L – ₹3.30 L / Sq. Yd.)
+                      </span>
+                    </div>
+                    <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-2 max-w-[72ch]">
+                      Prime freehold residential plots adjacent to DLF The Arbour. Sanctioned for Stilt + 4 Floors (S+4) map approvals with 100% power backup, wide paved avenues, and flexible 60–90 days payment terms.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink">
-                    ADANI PLOTS — Sector 63, Gurugram
-                  </h2>
-                  <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-1">
-                    Prime freehold residential plots adjacent to DLF The Arbour. Sanctioned for Stilt + 4 Floors (S+4) map approvals with 100% power backup, wide paved avenues, and flexible 60–90 days payment terms.
-                  </p>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-2 shrink-0">
-                  <span className="rounded-lg sm:rounded-xl bg-emerald-700 text-white px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow">
-                    Ready to Construct
-                  </span>
-                  <span className="rounded-lg sm:rounded-xl bg-sand text-ink border border-ink/15 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold">
-                    S+4 Approved
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-emerald-700 text-white px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-xs">
+                      Ready to Construct
+                    </span>
+                    <span className="rounded-lg bg-sand text-ink border border-ink/15 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold shadow-xs">
+                      S+4 Approved
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -657,32 +839,41 @@ export default function Projects() {
           {/* ============================================================== */}
           {/* PROJECT 3: TREVOC ROYAL RESIDENCES (Sector 56)                 */}
           {/* ============================================================== */}
-          {(activeProject === 'all' || activeProject === 'trevoc') && (
+          {filteredProjects.some((p) => p.id === 'trevoc') && (
             <div id="project-trevoc" className="mb-12 sm:mb-16 rounded-2xl sm:rounded-3xl border border-purple-900/30 bg-white p-4 sm:p-7 md:p-10 shadow-xl scroll-mt-24">
               {/* Top Banner */}
-              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4 sm:pb-5">
-                <div>
-                  <div className="inline-flex flex-wrap items-center gap-1.5 sm:gap-2 rounded-full bg-purple-50 border border-purple-300 px-2.5 sm:px-3.5 py-0.5 sm:py-1 text-[10px] sm:text-xs font-bold text-purple-900 uppercase tracking-wider mb-2">
-                    <span className="h-2 w-2 rounded-full bg-purple-700 animate-pulse" />
-                    <span>Luxury Sky Residences · Sector 56, Golf Course Road</span>
-                    <span className="hidden sm:inline">·</span>
-                    <span className="hidden sm:inline">50,000 Sq. Ft Club Royal &amp; 36,000 Sq. Ft Skydeck</span>
+              <div className="mb-6 sm:mb-8 border-b border-ink/10 pb-4 sm:pb-5">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-purple-50 border border-purple-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-purple-900 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-purple-700 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">Luxury Sky Residences · Sector 56, Golf Course Road</span>
+                    </div>
+                    <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink leading-tight">
+                      TREVOC ROYAL RESIDENCES — Sector 56
+                    </h2>
+                    {/* Starting Price Range Badge Banner */}
+                    <div className="mt-2.5 flex flex-wrap items-center gap-2">
+                      <span className="rounded-lg bg-purple-900 text-purple-100 font-bold px-3 py-1 text-xs sm:text-sm shadow-xs">
+                        Starting from ₹6.60 Crore Onwards
+                      </span>
+                      <span className="rounded-lg bg-sand border border-ink/10 text-ink font-semibold px-2.5 py-1 text-xs">
+                        Price Range: ₹6.60 Cr – ₹8.45 Cr+ (3 &amp; 4 BHK + Utility)
+                      </span>
+                    </div>
+                    <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-2 max-w-[72ch]">
+                      A luxury residential development designed around space, privacy, elevated living and premium amenities. Limited collection of 172 residences positioned from 80 ft above ground across 2 iconic towers.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-2xl sm:text-3xl md:text-4xl font-bold text-ink">
-                    TREVOC ROYAL RESIDENCES — Sector 56
-                  </h2>
-                  <p className="text-stone text-xs sm:text-sm md:text-base leading-relaxed mt-1">
-                    A luxury residential development designed around space, privacy, elevated living and premium amenities. Limited collection of 172 residences positioned from 80 ft above ground across 2 iconic towers.
-                  </p>
-                </div>
 
-                <div className="flex flex-wrap items-center gap-2 shrink-0">
-                  <span className="rounded-lg sm:rounded-xl bg-ink text-bronze-l px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow">
-                    172 Residences Only
-                  </span>
-                  <span className="rounded-lg sm:rounded-xl bg-purple-100 text-purple-950 border border-purple-300 px-3 sm:px-4 py-1.5 sm:py-2 text-[11px] sm:text-xs font-bold">
-                    3 &amp; 4 BHK + Utility
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-ink text-bronze-l px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-xs">
+                      172 Residences Only
+                    </span>
+                    <span className="rounded-lg bg-purple-100 text-purple-950 border border-purple-300 px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold shadow-xs">
+                      3 &amp; 4 BHK + Utility
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -985,6 +1176,28 @@ export default function Projects() {
                   ))}
                 </div>
               )}
+            </div>
+          )}
+
+          {/* Empty State when no project matches */}
+          {filteredProjects.length === 0 && (
+            <div className="mb-12 sm:mb-16 rounded-2xl border border-dashed border-ink/20 bg-white p-8 sm:p-12 text-center shadow-xs">
+              <div className="mx-auto h-12 w-12 rounded-full bg-sand/60 flex items-center justify-center text-xl mb-3">
+                🔍
+              </div>
+              <h4 className="font-serif text-lg font-bold text-ink mb-1">
+                No developments match your current starting price or type filter
+              </h4>
+              <p className="text-xs sm:text-sm text-stone max-w-[48ch] mx-auto mb-4">
+                Try selecting a different starting budget bracket or reset filters to explore all 3 premier active developments.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-bronze transition shadow-sm cursor-pointer"
+              >
+                Reset Filters (View All 3 Projects)
+              </button>
             </div>
           )}
 

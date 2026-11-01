@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useMemo } from 'react'
 import { Link } from 'react-router-dom'
 import CtaBand from '../components/CtaBand'
 import { Arrow, WhatsAppIcon, CalendarBookIcon } from '../components/Icons'
@@ -16,8 +16,16 @@ export default function Properties() {
   )
 
   const { properties, openDetails, openBooking } = useProperties()
-  const [selectedProjectTab, setSelectedProjectTab] = useState('all') // 'all' | 'bptp' | 'trevoc' | 'adani'
-  const [selectedTypeFilter, setSelectedTypeFilter] = useState('all') // 'all' | 'plots' | 'apartments'
+
+  // Real Estate Filter & Sort States
+  const [searchKeyword, setSearchKeyword] = useState('')
+  const [selectedProject, setSelectedProject] = useState('all') // 'all' | 'bptp' | 'trevoc' | 'adani'
+  const [selectedType, setSelectedType] = useState('all') // 'all' | 'plots' | 'apartments'
+  const [budgetRange, setBudgetRange] = useState('all') // 'all' | 'under-5' | '5-7' | '7-plus'
+  const [sortBy, setSortBy] = useState('price-asc') // 'price-asc' (Starting se High) | 'price-desc' | 'featured'
+  const [isSpotlightExpanded, setIsSpotlightExpanded] = useState(false)
+  const [activeSpotlightProject, setActiveSpotlightProject] = useState('bptp')
+
   const [bptpGalleryIndex, setBptpGalleryIndex] = useState(0)
   const [trevocGalleryIndex, setTrevocGalleryIndex] = useState(0)
   const [adaniGalleryIndex, setAdaniGalleryIndex] = useState(0)
@@ -41,18 +49,69 @@ export default function Properties() {
     { src: '/images/adani/stilt_4.jpg', title: 'S+4 Ready-to-Construct Avenue & Green Parks' },
   ]
 
-  const displayedProperties = properties.filter((p) => {
-    // Project filter
-    if (selectedProjectTab === 'bptp' && !p.project?.toLowerCase().includes('bptp')) return false
-    if (selectedProjectTab === 'trevoc' && !p.project?.toLowerCase().includes('trevoc')) return false
-    if (selectedProjectTab === 'adani' && !p.project?.toLowerCase().includes('adani')) return false
+  // Filter & Sort calculation (Real Estate Portal Pattern)
+  const displayedProperties = useMemo(() => {
+    let list = [...properties]
 
-    // Type filter
-    if (selectedTypeFilter === 'plots' && !p.type?.toLowerCase().includes('plot')) return false
-    if (selectedTypeFilter === 'apartments' && p.type?.toLowerCase().includes('plot')) return false
+    // 1. Search keyword
+    if (searchKeyword.trim()) {
+      const q = searchKeyword.toLowerCase().trim()
+      list = list.filter((p) => {
+        const text = `${p.title} ${p.project} ${p.location} ${p.type} ${p.developer} ${p.tag} ${p.description}`.toLowerCase()
+        return text.includes(q)
+      })
+    }
 
-    return true
-  })
+    // 2. Project filter
+    if (selectedProject === 'bptp') {
+      list = list.filter((p) => p.project?.toLowerCase().includes('bptp'))
+    } else if (selectedProject === 'trevoc') {
+      list = list.filter((p) => p.project?.toLowerCase().includes('trevoc'))
+    } else if (selectedProject === 'adani') {
+      list = list.filter((p) => p.project?.toLowerCase().includes('adani'))
+    }
+
+    // 3. Property Type filter
+    if (selectedType === 'plots') {
+      list = list.filter((p) => p.type?.toLowerCase().includes('plot'))
+    } else if (selectedType === 'apartments') {
+      list = list.filter((p) => !p.type?.toLowerCase().includes('plot') || p.type?.toLowerCase().includes('residence') || p.categorySlug === 'apartments')
+    }
+
+    // 4. Budget Range (Starting se High)
+    if (budgetRange === 'under-5') {
+      list = list.filter((p) => p.price <= 50000000)
+    } else if (budgetRange === '5-7') {
+      list = list.filter((p) => p.price >= 45000000 && p.price <= 70000000)
+    } else if (budgetRange === '7-plus') {
+      list = list.filter((p) => p.price >= 70000000)
+    }
+
+    // 5. Sorting
+    list.sort((a, b) => {
+      if (sortBy === 'price-asc') return a.price - b.price // Starting se High
+      if (sortBy === 'price-desc') return b.price - a.price // High to Low
+      return 0 // default
+    })
+
+    return list
+  }, [properties, searchKeyword, selectedProject, selectedType, budgetRange, sortBy])
+
+  // Reset filters helper
+  const resetFilters = () => {
+    setSearchKeyword('')
+    setSelectedProject('all')
+    setSelectedType('all')
+    setBudgetRange('all')
+    setSortBy('price-asc')
+  }
+
+  const hasActiveFilters =
+    searchKeyword.trim() !== '' ||
+    selectedProject !== 'all' ||
+    selectedType !== 'all' ||
+    budgetRange !== 'all' ||
+    sortBy !== 'price-asc'
 
   return (
     <>
@@ -81,144 +140,252 @@ export default function Properties() {
                 </p>
               </div>
 
-              {/* Badges: Compact on Mobile */}
-              <div className="flex flex-wrap items-center gap-2 shrink-0">
-                <span className="rounded-lg border border-bronze/30 bg-white px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold text-ink shadow-xs">
+              {/* Badges: Symmetrical Grid on Mobile */}
+              <div className="grid grid-cols-2 gap-2 w-full sm:w-auto sm:flex sm:items-center shrink-0">
+                <span className="rounded-xl border border-bronze/30 bg-white px-3 py-2 text-[11px] sm:text-xs font-bold text-ink shadow-xs text-center flex items-center justify-center gap-1.5">
                   ✓ 100% Title Verified
                 </span>
-                <span className="rounded-lg bg-emerald-700 px-2.5 sm:px-3.5 py-1 sm:py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs">
-                  Direct Channel Partner
+                <span className="rounded-xl bg-emerald-700 px-3 py-2 text-[11px] sm:text-xs font-bold uppercase tracking-wider text-white shadow-xs text-center flex items-center justify-center">
+                  Direct Partner
                 </span>
               </div>
             </div>
           </div>
 
-          {/* 2. Interactive Development Navigation Tabs (Fitted within Mobile Screen - No Horizontal Scroll) */}
-          <div className="mb-6 sm:mb-8">
-            <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-ink/10 pb-3">
-              {/* Responsive 2-col Grid on Mobile, Flex Row on Desktop */}
-              <div className="grid grid-cols-2 gap-2 w-full lg:flex lg:flex-wrap lg:items-center lg:w-auto">
-                <button
-                  type="button"
-                  onClick={() => setSelectedProjectTab('all')}
-                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                    selectedProjectTab === 'all'
-                      ? 'bg-ink text-white shadow-md'
-                      : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
-                  }`}
-                >
-                  <span className="truncate max-w-full">All Developments</span>
-                  <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold ${selectedProjectTab === 'all' ? 'bg-bronze text-white' : 'bg-sand text-ink'}`}>
-                    {properties.length}
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedProjectTab('bptp')}
-                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                    selectedProjectTab === 'bptp'
-                      ? 'bg-bronze text-white shadow-md'
-                      : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
-                  }`}
-                >
-                  <span className="truncate max-w-full">BPTP Green Oaks</span>
-                  <span className="rounded-full bg-emerald-600 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                    ONLY 2 PLOTS
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedProjectTab('trevoc')}
-                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                    selectedProjectTab === 'trevoc'
-                      ? 'bg-bronze text-white shadow-md'
-                      : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
-                  }`}
-                >
-                  <span className="truncate max-w-full">TREVOC Royal</span>
-                  <span className="rounded-full bg-purple-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                    3 &amp; 4 BHK
-                  </span>
-                </button>
-
-                <button
-                  type="button"
-                  onClick={() => setSelectedProjectTab('adani')}
-                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
-                    selectedProjectTab === 'adani'
-                      ? 'bg-bronze text-white shadow-md'
-                      : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
-                  }`}
-                >
-                  <span className="truncate max-w-full">Adani Plots</span>
-                  <span className="rounded-full bg-blue-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
-                    S+4 APPROVED
-                  </span>
-                </button>
+          {/* 2. Real Estate Portal Filter Suite (Starting se High Range & Quick Interactive Filters) */}
+          <div className="mb-6 sm:mb-8 rounded-2xl border border-bronze/30 bg-white p-4 sm:p-6 shadow-[0_10px_30px_-15px_rgba(0,0,0,0.1)]">
+            {/* Header: Title + Results Count + Clear Button */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2 border-b border-ink/10 pb-3 mb-4">
+              <div>
+                <span className="text-[10px] sm:text-[11px] font-bold uppercase tracking-wider text-bronze block">
+                  REAL ESTATE PROPERTY FINDER
+                </span>
+                <h2 className="font-serif text-lg sm:text-xl font-bold text-ink">
+                  Filter by Price Range, Project &amp; Asset Type
+                </h2>
               </div>
-
-              {/* Property Type Filter Chips (Screen-fitted 3-button segmented on mobile, inline on desktop) */}
-              <div className="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl border border-ink/10 text-xs w-full lg:w-auto lg:flex lg:items-center">
-                <button
-                  type="button"
-                  onClick={() => setSelectedTypeFilter('all')}
-                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
-                    selectedTypeFilter === 'all' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
-                  }`}
-                >
-                  All Types
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedTypeFilter('plots')}
-                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
-                    selectedTypeFilter === 'plots' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
-                  }`}
-                >
-                  <span className="sm:hidden">Plots</span>
-                  <span className="hidden sm:inline">Residential Plots</span>
-                </button>
-                <button
-                  type="button"
-                  onClick={() => setSelectedTypeFilter('apartments')}
-                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
-                    selectedTypeFilter === 'apartments' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
-                  }`}
-                >
-                  <span className="sm:hidden">Apartments</span>
-                  <span className="hidden sm:inline">Sky Residences</span>
-                </button>
+              <div className="flex items-center gap-2">
+                <span className="rounded-full bg-sand/70 px-3 py-1 text-xs font-bold text-ink border border-ink/10">
+                  {displayedProperties.length} Properties Match
+                </span>
+                {hasActiveFilters && (
+                  <button
+                    type="button"
+                    onClick={resetFilters}
+                    className="text-xs font-bold text-red-600 hover:text-red-700 underline cursor-pointer"
+                  >
+                    Reset All
+                  </button>
+                )}
               </div>
             </div>
+
+            {/* Core Real Estate Filter Dropdowns: Responsive 4-Column Grid */}
+            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4 mb-4">
+              {/* 1. Keyword Search */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Search Property / Sector
+                </label>
+                <div className="relative">
+                  <input
+                    type="search"
+                    value={searchKeyword}
+                    onChange={(e) => setSearchKeyword(e.target.value)}
+                    placeholder="e.g. BPTP, Sector 70A, 3 BHK..."
+                    className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3.5 py-2.5 text-xs text-ink placeholder:text-stone/60 focus:border-bronze focus:bg-white focus:outline-none"
+                  />
+                  {searchKeyword && (
+                    <button
+                      type="button"
+                      onClick={() => setSearchKeyword('')}
+                      className="absolute right-3 top-2.5 text-xs text-stone hover:text-ink font-bold"
+                    >
+                      ✕
+                    </button>
+                  )}
+                </div>
+              </div>
+
+              {/* 2. Development / Project */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Development / Project
+                </label>
+                <select
+                  value={selectedProject}
+                  onChange={(e) => {
+                    setSelectedProject(e.target.value)
+                    if (e.target.value !== 'all') setActiveSpotlightProject(e.target.value)
+                  }}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Developments ({properties.length} Properties)</option>
+                  <option value="bptp">BPTP Green Oaks (Sector 70A)</option>
+                  <option value="trevoc">TREVOC Royal Residences (Sector 56)</option>
+                  <option value="adani">Adani Plots (Sector 63)</option>
+                </select>
+              </div>
+
+              {/* 3. Budget / Price Range ("Starting se High") */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Price Range (Starting se High)
+                </label>
+                <select
+                  value={budgetRange}
+                  onChange={(e) => setBudgetRange(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="all">All Budgets (₹4.11 Cr – ₹8.81 Cr)</option>
+                  <option value="under-5">Starting Range: Under ₹5.00 Cr (BPTP Plots)</option>
+                  <option value="5-7">Mid-Tier Range: ₹5.00 Cr – ₹7.00 Cr (Adani 170 &amp; TREVOC 3BHK)</option>
+                  <option value="7-plus">Ultra-Luxury: Above ₹7.00 Cr (4 BHK &amp; Large Plots)</option>
+                </select>
+              </div>
+
+              {/* 4. Sort By: Starting se High */}
+              <div>
+                <label className="block text-[11px] font-bold uppercase tracking-wider text-stone mb-1">
+                  Sort Order
+                </label>
+                <select
+                  value={sortBy}
+                  onChange={(e) => setSortBy(e.target.value)}
+                  className="w-full rounded-xl border border-ink/15 bg-sand/20 px-3 py-2.5 text-xs text-ink font-medium focus:border-bronze focus:bg-white focus:outline-none cursor-pointer"
+                >
+                  <option value="price-asc">Price: Low to High (Starting se High) ⚡</option>
+                  <option value="price-desc">Price: High to Low (High se Low)</option>
+                  <option value="featured">Featured / Verified First</option>
+                </select>
+              </div>
+            </div>
+
+           
+
+            {/* Active Filter Chips Strip */}
+            {hasActiveFilters && (
+              <div className="mt-3 pt-3 border-t border-ink/10 flex flex-wrap items-center gap-1.5 text-xs">
+                <span className="text-[11px] text-stone font-semibold">Active Filters:</span>
+                {searchKeyword && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink">
+                    Keyword: "{searchKeyword}"
+                    <button type="button" onClick={() => setSearchKeyword('')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {selectedProject !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink capitalize">
+                    Project: {selectedProject}
+                    <button type="button" onClick={() => setSelectedProject('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {selectedType !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink capitalize">
+                    Type: {selectedType}
+                    <button type="button" onClick={() => setSelectedType('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {budgetRange !== 'all' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink">
+                    Range: {budgetRange === 'under-5' ? '< ₹5 Cr' : budgetRange === '5-7' ? '₹5–₹7 Cr' : '> ₹7 Cr'}
+                    <button type="button" onClick={() => setBudgetRange('all')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                {sortBy !== 'price-asc' && (
+                  <span className="inline-flex items-center gap-1 rounded-md bg-sand px-2 py-0.5 text-[11px] font-bold text-ink">
+                    Sort: {sortBy === 'price-desc' ? 'High to Low' : 'Featured'}
+                    <button type="button" onClick={() => setSortBy('price-asc')} className="hover:text-red-600 font-bold ml-0.5">✕</button>
+                  </span>
+                )}
+                <button
+                  type="button"
+                  onClick={resetFilters}
+                  className="text-[11px] text-bronze-d hover:text-ink font-bold ml-1 cursor-pointer underline"
+                >
+                  Clear all
+                </button>
+              </div>
+            )}
           </div>
 
-          {/* 3. DYNAMIC PROJECT SPOTLIGHT BOX */}
-          {/* A. BPTP Green Oaks Spotlight (shown when tab is 'all' or 'bptp') */}
-          {(selectedProjectTab === 'all' || selectedProjectTab === 'bptp') && (
+          {/* Project Deep Dive Selector Tabs (Shown only when Deep Dive is expanded) */}
+          {isSpotlightExpanded && (
+            <div className="mb-6 flex flex-wrap items-center justify-between gap-2 border-b border-ink/10 pb-3">
+              <div className="flex flex-wrap items-center gap-1.5">
+                <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-stone mr-1">
+                  Select Project Deep Dive:
+                </span>
+                <button
+                  type="button"
+                  onClick={() => setActiveSpotlightProject('bptp')}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+                    activeSpotlightProject === 'bptp'
+                      ? 'bg-emerald-700 text-white shadow-xs'
+                      : 'bg-white border border-ink/15 text-ink hover:bg-sand/40'
+                  }`}
+                >
+                  BPTP Green Oaks (Sec 70A)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSpotlightProject('trevoc')}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+                    activeSpotlightProject === 'trevoc'
+                      ? 'bg-purple-700 text-white shadow-xs'
+                      : 'bg-white border border-ink/15 text-ink hover:bg-sand/40'
+                  }`}
+                >
+                  TREVOC Royal (Sec 56)
+                </button>
+                <button
+                  type="button"
+                  onClick={() => setActiveSpotlightProject('adani')}
+                  className={`rounded-lg px-3 py-1.5 text-xs font-bold transition cursor-pointer ${
+                    activeSpotlightProject === 'adani'
+                      ? 'bg-blue-700 text-white shadow-xs'
+                      : 'bg-white border border-ink/15 text-ink hover:bg-sand/40'
+                  }`}
+                >
+                  Adani Plots (Sec 63)
+                </button>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setIsSpotlightExpanded(false)}
+                className="text-xs font-semibold text-stone hover:text-ink cursor-pointer ml-auto"
+              >
+                ✕ Close Deep Dive
+              </button>
+            </div>
+          )}
+
+          {/* 3. DYNAMIC PROJECT SPOTLIGHT BOX (Deep Dive) */}
+          {/* A. BPTP Green Oaks Spotlight */}
+          {isSpotlightExpanded && (selectedProject === 'bptp' || (selectedProject === 'all' && activeSpotlightProject === 'bptp')) && (
             <div className="mb-10 sm:mb-12 rounded-2xl sm:rounded-3xl border border-bronze/30 bg-white p-4 sm:p-7 shadow-xl">
-              <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4">
-                <div>
-                  <div className="inline-flex flex-wrap items-center gap-1.5 rounded-full bg-emerald-50 border border-emerald-300 px-2.5 sm:px-3 py-0.5 text-[10px] sm:text-[11px] font-bold text-emerald-800 uppercase tracking-wider mb-1">
-                    <span>★ Featured Plotted Community</span>
-                    <span className="hidden sm:inline">·</span>
-                    <span>1% Commission Committed</span>
+              <div className="mb-5 sm:mb-6 border-b border-ink/10 pb-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-emerald-50 border border-emerald-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-emerald-800 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-emerald-600 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">Featured Plotted Community · Sector 70A, Gurgaon</span>
+                    </div>
+                    <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink leading-tight">
+                      BPTP GREEN OAKS — Sector 70A
+                    </h2>
+                    <p className="text-xs sm:text-sm text-stone leading-relaxed mt-1.5 max-w-[70ch]">
+                      Premium gated plotted society featuring East-Facing 137 Sq. Yds. plots, exclusive club house, and expansive central park.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink">
-                    BPTP GREEN OAKS — Sector 70A, Gurgaon
-                  </h2>
-                  <p className="text-xs sm:text-sm text-stone mt-1">
-                    Premium gated plotted society featuring East-Facing 137 Sq. Yds. plots, exclusive club house, and huge central park.
-                  </p>
-                </div>
-                <div className="flex flex-wrap items-center gap-2">
-                  <span className="rounded-lg bg-emerald-700 text-white px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold uppercase tracking-wider shadow-xs">
-                    Only 2 Plots Available
-                  </span>
-                  <span className="rounded-lg bg-amber-100 text-amber-900 border border-amber-300 px-2.5 sm:px-3.5 py-1 text-[11px] sm:text-xs font-bold">
-                    East-Facing
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-emerald-700 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider shadow-xs">
+                      Only 2 Plots Available
+                    </span>
+                    <span className="rounded-lg bg-amber-100 text-amber-900 border border-amber-300 px-3 py-1.5 text-xs font-bold shadow-xs">
+                      East-Facing
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -397,30 +564,31 @@ export default function Properties() {
             </div>
           )}
 
-          {/* B. TREVOC Royal Residences Spotlight (shown when tab is 'trevoc') */}
-          {selectedProjectTab === 'trevoc' && (
+          {/* B. TREVOC Royal Residences Spotlight */}
+          {isSpotlightExpanded && (selectedProject === 'trevoc' || (selectedProject === 'all' && activeSpotlightProject === 'trevoc')) && (
             <div className="mb-10 sm:mb-12 rounded-2xl sm:rounded-3xl border border-bronze/30 bg-white p-4 sm:p-7 shadow-xl">
-              <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-purple-50 border border-purple-300 px-3 py-0.5 text-[10px] sm:text-[11px] font-bold text-purple-900 uppercase tracking-wider mb-1">
-                    <span>★ Ultra-Luxury Sky Residences</span>
-                    <span>·</span>
-                    <span>Sector 56, Golf Course Road</span>
+              <div className="mb-5 sm:mb-6 border-b border-ink/10 pb-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-purple-50 border border-purple-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-purple-900 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-purple-700 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">Ultra-Luxury Sky Residences · Sector 56, Golf Course Road</span>
+                    </div>
+                    <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink leading-tight">
+                      TREVOC ROYAL RESIDENCES — Sector 56
+                    </h2>
+                    <p className="text-xs sm:text-sm text-stone leading-relaxed mt-1.5 max-w-[70ch]">
+                      172 exclusive residences across 2 iconic towers with 50,000 sq. ft Club Royal and 36,000 sq. ft Skydeck.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink">
-                    TREVOC ROYAL RESIDENCES — Sector 56
-                  </h2>
-                  <p className="text-xs sm:text-sm text-stone mt-1">
-                    172 exclusive residences across 2 iconic towers with 50,000 sq. ft Club Royal and 36,000 sq. ft Skydeck.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-lg bg-ink text-bronze-l px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-xs">
-                    172 Residences Only
-                  </span>
-                  <span className="rounded-lg bg-sand text-ink px-3 py-1 text-xs font-bold border border-ink/10">
-                    Elevated 80 Ft
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-ink text-bronze-l px-3 py-1.5 text-xs font-bold uppercase tracking-wider shadow-xs">
+                      172 Residences Only
+                    </span>
+                    <span className="rounded-lg bg-purple-100 text-purple-950 border border-purple-300 px-3 py-1.5 text-xs font-bold shadow-xs">
+                      Elevated 80 Ft
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -523,30 +691,31 @@ export default function Properties() {
             </div>
           )}
 
-          {/* C. Adani Plots Spotlight (shown when tab is 'adani') */}
-          {selectedProjectTab === 'adani' && (
+          {/* C. Adani Plots Spotlight */}
+          {isSpotlightExpanded && (selectedProject === 'adani' || (selectedProject === 'all' && activeSpotlightProject === 'adani')) && (
             <div className="mb-10 sm:mb-12 rounded-2xl sm:rounded-3xl border border-bronze/30 bg-white p-4 sm:p-7 shadow-xl">
-              <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 border-b border-ink/10 pb-4">
-                <div>
-                  <div className="inline-flex items-center gap-1.5 rounded-full bg-blue-50 border border-blue-300 px-3 py-0.5 text-[10px] sm:text-[11px] font-bold text-blue-900 uppercase tracking-wider mb-1">
-                    <span>★ S+4 Map Approved Plotted Enclave</span>
-                    <span>·</span>
-                    <span>Sector 63, Golf Extension Road</span>
+              <div className="mb-5 sm:mb-6 border-b border-ink/10 pb-4">
+                <div className="flex flex-col md:flex-row md:items-start md:justify-between gap-3 sm:gap-4">
+                  <div className="min-w-0 flex-1">
+                    <div className="inline-flex items-center gap-2 rounded-lg bg-blue-50 border border-blue-200 px-3 py-1 text-[11px] sm:text-xs font-bold text-blue-900 tracking-wide mb-2 max-w-full">
+                      <span className="h-2 w-2 rounded-full bg-blue-700 animate-pulse shrink-0" />
+                      <span className="leading-snug break-words">S+4 Map Approved Plotted Enclave · Sector 63</span>
+                    </div>
+                    <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink leading-tight">
+                      ADANI PLOTS — Sector 63, Gurugram
+                    </h2>
+                    <p className="text-xs sm:text-sm text-stone leading-relaxed mt-1.5 max-w-[70ch]">
+                      170, 253 and 267 Sq. Yd. plots adjacent to DLF The Arbour with sanctioned Stilt + 4 Floors map approvals.
+                    </p>
                   </div>
-                  <h2 className="font-serif text-xl sm:text-2xl md:text-3xl font-bold text-ink">
-                    ADANI PLOTS — Sector 63, Gurugram
-                  </h2>
-                  <p className="text-xs sm:text-sm text-stone mt-1">
-                    170, 253 and 267 Sq. Yd. plots adjacent to DLF The Arbour with sanctioned Stilt + 4 Floors map approvals.
-                  </p>
-                </div>
-                <div className="flex items-center gap-2">
-                  <span className="rounded-lg bg-emerald-700 text-white px-3 py-1 text-xs font-bold uppercase tracking-wider shadow-xs">
-                    Ready to Construct
-                  </span>
-                  <span className="rounded-lg bg-sand text-ink px-3 py-1 text-xs font-bold border border-ink/10">
-                    60–90 Days Payment
-                  </span>
+                  <div className="flex flex-wrap items-center gap-2 shrink-0 pt-1">
+                    <span className="rounded-lg bg-emerald-700 text-white px-3 py-1.5 text-xs font-bold uppercase tracking-wider shadow-xs">
+                      Ready to Construct
+                    </span>
+                    <span className="rounded-lg bg-sand text-ink border border-ink/15 px-3 py-1.5 text-xs font-bold shadow-xs">
+                      60–90 Days Payment
+                    </span>
+                  </div>
                 </div>
               </div>
 
@@ -649,26 +818,53 @@ export default function Properties() {
           )}
 
           {/* 4. Filter / Header Bar for Inventory Grid */}
-          <div className="mb-5 sm:mb-6 flex items-center justify-between gap-3 rounded-xl border border-ink/10 bg-white p-3.5 sm:p-4 shadow-xs">
+          <div className="mb-5 sm:mb-6 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 rounded-xl border border-ink/10 bg-white p-3.5 sm:p-4 shadow-xs">
             <div>
               <span className="text-[10px] sm:text-xs font-bold uppercase tracking-wider text-stone block">
-                Active Listings
+                Verified Inventory
               </span>
               <h3 className="font-serif text-base sm:text-lg font-bold text-ink">
                 Available Plots &amp; Residences Directory
               </h3>
             </div>
 
-            <div className="flex items-center gap-2 text-xs text-stone font-medium">
+            <div className="flex flex-wrap items-center gap-2 text-xs text-stone font-medium">
               <span className="font-bold text-ink bg-sand/60 px-2 sm:px-2.5 py-1 rounded-md border border-ink/5 text-[11px] sm:text-xs">
                 {displayedProperties.length} Properties
+              </span>
+              <span className="text-[11px] sm:text-xs font-bold text-emerald-800 bg-emerald-50 border border-emerald-200 px-2 sm:px-2.5 py-1 rounded-md">
+                {sortBy === 'price-asc'
+                  ? '⚡ Sorted: Starting se High'
+                  : sortBy === 'price-desc'
+                  ? 'Sorted: High to Low'
+                  : 'Sorted: Featured'}
               </span>
             </div>
           </div>
 
-          {/* 5. LIVE PROPERTY INVENTORY CARDS GRID */}
-          <div className="grid gap-5 sm:gap-7 sm:grid-cols-2 lg:grid-cols-3">
-            {displayedProperties.map((p, idx) => (
+          {/* 5. LIVE PROPERTY INVENTORY CARDS GRID OR EMPTY STATE */}
+          {displayedProperties.length === 0 ? (
+            <div className="rounded-2xl border border-dashed border-ink/20 bg-white p-8 sm:p-12 text-center my-6">
+              <div className="mx-auto h-12 w-12 rounded-full bg-sand/60 flex items-center justify-center text-xl mb-3">
+                🔍
+              </div>
+              <h4 className="font-serif text-lg font-bold text-ink mb-1">
+                No properties match your current price or type filter
+              </h4>
+              <p className="text-xs sm:text-sm text-stone max-w-[45ch] mx-auto mb-4">
+                Try selecting a different price range bracket or clear your search to view all verified properties.
+              </p>
+              <button
+                type="button"
+                onClick={resetFilters}
+                className="inline-flex items-center gap-1.5 rounded-lg bg-ink px-4 py-2.5 text-xs font-bold uppercase tracking-wider text-white hover:bg-bronze transition shadow-sm cursor-pointer"
+              >
+                Reset Filters (View All {properties.length} Properties)
+              </button>
+            </div>
+          ) : (
+            <div className="grid gap-5 sm:gap-7 sm:grid-cols-2 lg:grid-cols-3">
+              {displayedProperties.map((p, idx) => (
               <Reveal
                 key={p.id}
                 delay={idx * 40}
@@ -809,6 +1005,7 @@ export default function Properties() {
               </Reveal>
             ))}
           </div>
+        )}
 
           {/* 6. Why Invest in BPTP Green Oaks & TREVOC Strip */}
           <div className="mt-10 sm:mt-14 grid gap-6 md:grid-cols-2">

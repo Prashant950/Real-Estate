@@ -181,14 +181,14 @@ export function PropertyProvider({ children }) {
         if (!locMatch) return false
       }
 
-      // Budget check
-      if (selectedBudget && selectedBudget !== 'All') {
-        if (selectedBudget === 'under-3') {
-          if (p.price > 30000000) return false
-        } else if (selectedBudget === '3-6') {
-          if (p.price < 30000000 || p.price > 60000000) return false
-        } else if (selectedBudget === '6-10') {
-          if (p.price < 60000000 || p.price > 100000000) return false
+      // Budget check (Portfolio ranges from ₹4.11 Cr to ₹8.81 Cr)
+      if (selectedBudget && selectedBudget !== 'All' && selectedBudget !== 'all') {
+        if (selectedBudget === 'under-5' || selectedBudget === 'under-3') {
+          if (p.price > 50000000) return false
+        } else if (selectedBudget === '5-7' || selectedBudget === '3-6') {
+          if (p.price < 45000000 || p.price > 70000000) return false
+        } else if (selectedBudget === '7-plus' || selectedBudget === 'above-7' || selectedBudget === '6-10') {
+          if (p.price < 70000000) return false
         } else if (selectedBudget === '10-plus') {
           if (p.price < 100000000) return false
         }
@@ -196,8 +196,8 @@ export function PropertyProvider({ children }) {
 
       return true
     }).sort((a, b) => {
-      if (sortBy === 'price-low') return a.price - b.price
-      if (sortBy === 'price-high') return b.price - a.price
+      if (sortBy === 'price-low') return a.price - b.price // Starting se High
+      if (sortBy === 'price-high') return b.price - a.price // High to Low
       if (sortBy === 'bedrooms') return b.bedrooms - a.bedrooms
       return 0 // default order (featured / newly added first)
     })
