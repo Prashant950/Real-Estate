@@ -65,9 +65,8 @@ export default function PropertyDetailsModal() {
                     key={idx}
                     type="button"
                     onClick={() => setActiveImageIndex(idx)}
-                    className={`h-14 w-20 sm:h-16 sm:w-24 shrink-0 overflow-hidden rounded-lg border-2 transition cursor-pointer ${
-                      activeImageIndex === idx ? 'border-bronze ring-2 ring-bronze/40 scale-105' : 'border-white/20 opacity-60 hover:opacity-100'
-                    }`}
+                    className={`h-14 w-20 sm:h-16 sm:w-24 shrink-0 overflow-hidden rounded-lg border-2 transition cursor-pointer ${activeImageIndex === idx ? 'border-bronze ring-2 ring-bronze/40 scale-105' : 'border-white/20 opacity-60 hover:opacity-100'
+                      }`}
                   >
                     <img src={img} alt="Thumbnail" loading="lazy" decoding="async" className="h-full w-full object-cover" />
                   </button>

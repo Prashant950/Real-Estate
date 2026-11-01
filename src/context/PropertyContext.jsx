@@ -33,6 +33,40 @@ export function PropertyProvider({ children }) {
   const [bookingProperty, setBookingProperty] = useState(null)
   const [notification, setNotification] = useState(null)
 
+  // Centralized background scroll lock when any modal is open
+  const isAnyModalActive = Boolean(detailsProperty || bookingProperty || isAddModalOpen)
+
+  useEffect(() => {
+    if (isAnyModalActive) {
+      // Calculate scrollbar width before locking to avoid page jump on desktop
+      const scrollBarWidth = window.innerWidth - document.documentElement.clientWidth
+      const prevOverflow = document.body.style.overflow
+      const prevPaddingRight = document.body.style.paddingRight
+
+      document.body.style.overflow = 'hidden'
+      if (scrollBarWidth > 0) {
+        document.body.style.paddingRight = `${scrollBarWidth}px`
+      }
+      document.body.classList.add('modal-open-locked')
+
+      const handleEscape = (e) => {
+        if (e.key === 'Escape') {
+          if (bookingProperty) setBookingProperty(null)
+          else if (detailsProperty) setDetailsProperty(null)
+          else if (isAddModalOpen) setIsAddModalOpen(false)
+        }
+      }
+      window.addEventListener('keydown', handleEscape)
+
+      return () => {
+        document.body.style.overflow = prevOverflow || ''
+        document.body.style.paddingRight = prevPaddingRight || ''
+        document.body.classList.remove('modal-open-locked')
+        window.removeEventListener('keydown', handleEscape)
+      }
+    }
+  }, [isAnyModalActive, bookingProperty, detailsProperty, isAddModalOpen])
+
   // Save changes to localStorage
   useEffect(() => {
     try {

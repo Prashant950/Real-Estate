@@ -226,11 +226,10 @@ export default function AddPropertyModal() {
                   key={img.label}
                   type="button"
                   onClick={() => setForm({ ...form, image: img.url })}
-                  className={`rounded border px-2.5 py-1 text-xs transition ${
-                    form.image === img.url
+                  className={`rounded border px-2.5 py-1 text-xs transition ${form.image === img.url
                       ? 'border-bronze bg-bronze text-white font-bold'
                       : 'border-white/20 bg-white/5 text-white/80 hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   {img.label}
                 </button>

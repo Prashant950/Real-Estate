@@ -93,21 +93,21 @@ export default function Properties() {
             </div>
           </div>
 
-          {/* 2. Interactive Development Navigation Tabs (Mobile Finger Scroll + Desktop Wrap) */}
+          {/* 2. Interactive Development Navigation Tabs (Fitted within Mobile Screen - No Horizontal Scroll) */}
           <div className="mb-6 sm:mb-8">
             <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 border-b border-ink/10 pb-3">
-              {/* Horizontal Scroll on Mobile */}
-              <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1 -mx-4 px-4 sm:mx-0 sm:px-0">
+              {/* Responsive 2-col Grid on Mobile, Flex Row on Desktop */}
+              <div className="grid grid-cols-2 gap-2 w-full lg:flex lg:flex-wrap lg:items-center lg:w-auto">
                 <button
                   type="button"
                   onClick={() => setSelectedProjectTab('all')}
-                  className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                     selectedProjectTab === 'all'
                       ? 'bg-ink text-white shadow-md'
                       : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
                   }`}
                 >
-                  <span>All Developments</span>
+                  <span className="truncate max-w-full">All Developments</span>
                   <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold ${selectedProjectTab === 'all' ? 'bg-bronze text-white' : 'bg-sand text-ink'}`}>
                     {properties.length}
                   </span>
@@ -116,13 +116,13 @@ export default function Properties() {
                 <button
                   type="button"
                   onClick={() => setSelectedProjectTab('bptp')}
-                  className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                     selectedProjectTab === 'bptp'
                       ? 'bg-bronze text-white shadow-md'
                       : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
                   }`}
                 >
-                  <span>BPTP Green Oaks (Sec 70A)</span>
+                  <span className="truncate max-w-full">BPTP Green Oaks</span>
                   <span className="rounded-full bg-emerald-600 text-white px-1.5 py-0.5 text-[9px] font-bold">
                     ONLY 2 PLOTS
                   </span>
@@ -131,13 +131,13 @@ export default function Properties() {
                 <button
                   type="button"
                   onClick={() => setSelectedProjectTab('trevoc')}
-                  className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                     selectedProjectTab === 'trevoc'
                       ? 'bg-bronze text-white shadow-md'
                       : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
                   }`}
                 >
-                  <span>TREVOC Royal (Sec 56)</span>
+                  <span className="truncate max-w-full">TREVOC Royal</span>
                   <span className="rounded-full bg-purple-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
                     3 &amp; 4 BHK
                   </span>
@@ -146,26 +146,26 @@ export default function Properties() {
                 <button
                   type="button"
                   onClick={() => setSelectedProjectTab('adani')}
-                  className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                  className={`rounded-xl px-2.5 sm:px-4 py-2 sm:py-2 text-xs font-bold transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                     selectedProjectTab === 'adani'
                       ? 'bg-bronze text-white shadow-md'
                       : 'border border-ink/15 bg-white text-ink hover:border-bronze hover:bg-sand/40'
                   }`}
                 >
-                  <span>Adani Plots (Sec 63)</span>
+                  <span className="truncate max-w-full">Adani Plots</span>
                   <span className="rounded-full bg-blue-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
                     S+4 APPROVED
                   </span>
                 </button>
               </div>
 
-              {/* Property Type Filter Chips */}
-              <div className="flex items-center gap-1 bg-white p-1 rounded-xl border border-ink/10 text-xs shrink-0 self-start lg:self-auto overflow-x-auto no-scrollbar max-w-full">
+              {/* Property Type Filter Chips (Screen-fitted 3-button segmented on mobile, inline on desktop) */}
+              <div className="grid grid-cols-3 gap-1 bg-white p-1 rounded-xl border border-ink/10 text-xs w-full lg:w-auto lg:flex lg:items-center">
                 <button
                   type="button"
                   onClick={() => setSelectedTypeFilter('all')}
-                  className={`rounded-lg px-2.5 sm:px-3 py-1 font-semibold transition cursor-pointer whitespace-nowrap ${
-                    selectedTypeFilter === 'all' ? 'bg-sand text-ink font-bold' : 'text-stone hover:text-ink'
+                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
+                    selectedTypeFilter === 'all' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
                   }`}
                 >
                   All Types
@@ -173,20 +173,22 @@ export default function Properties() {
                 <button
                   type="button"
                   onClick={() => setSelectedTypeFilter('plots')}
-                  className={`rounded-lg px-2.5 sm:px-3 py-1 font-semibold transition cursor-pointer whitespace-nowrap ${
-                    selectedTypeFilter === 'plots' ? 'bg-sand text-ink font-bold' : 'text-stone hover:text-ink'
+                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
+                    selectedTypeFilter === 'plots' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
                   }`}
                 >
-                  Residential Plots
+                  <span className="sm:hidden">Plots</span>
+                  <span className="hidden sm:inline">Residential Plots</span>
                 </button>
                 <button
                   type="button"
                   onClick={() => setSelectedTypeFilter('apartments')}
-                  className={`rounded-lg px-2.5 sm:px-3 py-1 font-semibold transition cursor-pointer whitespace-nowrap ${
-                    selectedTypeFilter === 'apartments' ? 'bg-sand text-ink font-bold' : 'text-stone hover:text-ink'
+                  className={`rounded-lg py-1.5 sm:py-1 px-2 text-center font-semibold transition cursor-pointer ${
+                    selectedTypeFilter === 'apartments' ? 'bg-sand text-ink font-bold shadow-xs' : 'text-stone hover:text-ink'
                   }`}
                 >
-                  Sky Residences
+                  <span className="sm:hidden">Apartments</span>
+                  <span className="hidden sm:inline">Sky Residences</span>
                 </button>
               </div>
             </div>
@@ -254,11 +256,10 @@ export default function Properties() {
                         key={idx}
                         type="button"
                         onClick={() => setBptpGalleryIndex(idx)}
-                        className={`relative overflow-hidden rounded-md border-2 transition cursor-pointer aspect-[16/10] ${
-                          bptpGalleryIndex === idx
+                        className={`relative overflow-hidden rounded-md border-2 transition cursor-pointer aspect-[16/10] ${bptpGalleryIndex === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-[1.02]'
                             : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>
@@ -455,11 +456,10 @@ export default function Properties() {
                         key={idx}
                         type="button"
                         onClick={() => setTrevocGalleryIndex(idx)}
-                        className={`relative h-14 w-20 sm:h-16 sm:w-24 shrink-0 overflow-hidden rounded-md border-2 transition cursor-pointer ${
-                          trevocGalleryIndex === idx
+                        className={`relative h-14 w-20 sm:h-16 sm:w-24 shrink-0 overflow-hidden rounded-md border-2 transition cursor-pointer ${trevocGalleryIndex === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-[1.02]'
                             : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>
@@ -582,11 +582,10 @@ export default function Properties() {
                         key={idx}
                         type="button"
                         onClick={() => setAdaniGalleryIndex(idx)}
-                        className={`relative overflow-hidden rounded-md border-2 transition cursor-pointer aspect-[16/10] ${
-                          adaniGalleryIndex === idx
+                        className={`relative overflow-hidden rounded-md border-2 transition cursor-pointer aspect-[16/10] ${adaniGalleryIndex === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-[1.02]'
                             : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>

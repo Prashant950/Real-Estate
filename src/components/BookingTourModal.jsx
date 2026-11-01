@@ -134,11 +134,10 @@ export default function BookingTourModal() {
                   key={t}
                   type="button"
                   onClick={() => setForm({ ...form, tourType: t })}
-                  className={`rounded border p-2.5 text-center text-xs font-semibold transition cursor-pointer ${
-                    form.tourType === t
+                  className={`rounded border p-2.5 text-center text-xs font-semibold transition cursor-pointer ${form.tourType === t
                       ? 'border-bronze bg-bronze/20 text-bronze-l font-bold'
                       : 'border-white/15 bg-white/5 text-white/70 hover:bg-white/10'
-                  }`}
+                    }`}
                 >
                   {t}
                 </button>

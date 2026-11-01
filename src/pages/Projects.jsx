@@ -92,19 +92,19 @@ export default function Projects() {
             </div>
           </div>
 
-          {/* 2. Interactive Project Selector Tab Bar (Horizontal Touch Scroll on Mobile) */}
+          {/* 2. Interactive Project Selector Tab Bar (Fitted within Mobile Screen - No Horizontal Scroll) */}
           <div className="mb-8 sm:mb-10 flex flex-col md:flex-row md:items-center md:justify-between gap-3 border-b border-ink/10 pb-3">
-            <div className="flex items-center gap-2 overflow-x-auto no-scrollbar pb-1.5 -mx-4 px-4 sm:mx-0 sm:px-0">
+            <div className="grid grid-cols-2 gap-2 w-full md:flex md:flex-wrap md:items-center md:w-auto md:gap-2">
               <button
                 type="button"
                 onClick={() => setActiveProject('all')}
-                className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                   activeProject === 'all'
                     ? 'bg-ink text-white shadow-md'
                     : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
                 }`}
               >
-                <span>All 3 Projects</span>
+                <span className="truncate max-w-full">All 3 Projects</span>
                 <span className={`rounded-full px-1.5 py-0.2 text-[10px] font-extrabold ${activeProject === 'all' ? 'bg-bronze text-white' : 'bg-sand text-ink'}`}>
                   3
                 </span>
@@ -113,13 +113,13 @@ export default function Projects() {
               <button
                 type="button"
                 onClick={() => setActiveProject('bptp')}
-                className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                   activeProject === 'bptp'
                     ? 'bg-bronze text-white shadow-md'
                     : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
                 }`}
               >
-                <span>BPTP Green Oaks (Sector 70A)</span>
+                <span className="truncate max-w-full">BPTP Green Oaks</span>
                 <span className="rounded-full bg-emerald-600 text-white px-1.5 py-0.5 text-[9px] font-bold">
                   ONLY 2 PLOTS
                 </span>
@@ -128,13 +128,13 @@ export default function Projects() {
               <button
                 type="button"
                 onClick={() => setActiveProject('adani')}
-                className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                   activeProject === 'adani'
                     ? 'bg-bronze text-white shadow-md'
                     : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
                 }`}
               >
-                <span>Adani Plots (Sector 63)</span>
+                <span className="truncate max-w-full">Adani Plots</span>
                 <span className="rounded-full bg-blue-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
                   S+4 APPROVED
                 </span>
@@ -143,13 +143,13 @@ export default function Projects() {
               <button
                 type="button"
                 onClick={() => setActiveProject('trevoc')}
-                className={`shrink-0 rounded-xl px-3.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex items-center gap-1.5 whitespace-nowrap ${
+                className={`rounded-xl px-2.5 sm:px-4 py-2 text-xs font-bold uppercase tracking-wider transition cursor-pointer flex flex-col sm:flex-row items-center justify-center sm:justify-start gap-1 sm:gap-1.5 text-center sm:text-left ${
                   activeProject === 'trevoc'
                     ? 'bg-bronze text-white shadow-md'
                     : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'
                 }`}
               >
-                <span>TREVOC Royal (Sector 56)</span>
+                <span className="truncate max-w-full">TREVOC Royal</span>
                 <span className="rounded-full bg-purple-700 text-white px-1.5 py-0.5 text-[9px] font-bold">
                   3 &amp; 4 BHK
                 </span>
@@ -231,11 +231,10 @@ export default function Projects() {
                         key={idx}
                         type="button"
                         onClick={() => setBptpImgIdx(idx)}
-                        className={`relative overflow-hidden rounded-lg border-2 transition cursor-pointer aspect-[16/10] ${
-                          bptpImgIdx === idx
+                        className={`relative overflow-hidden rounded-lg border-2 transition cursor-pointer aspect-[16/10] ${bptpImgIdx === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-[1.02]'
                             : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>
@@ -492,11 +491,10 @@ export default function Projects() {
                         key={idx}
                         type="button"
                         onClick={() => setAdaniImgIdx(idx)}
-                        className={`relative overflow-hidden rounded-lg border-2 transition cursor-pointer aspect-[16/10] ${
-                          adaniImgIdx === idx
+                        className={`relative overflow-hidden rounded-lg border-2 transition cursor-pointer aspect-[16/10] ${adaniImgIdx === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-[1.02]'
                             : 'border-transparent opacity-70 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>
@@ -722,11 +720,10 @@ export default function Projects() {
                         key={idx}
                         type="button"
                         onClick={() => setTrevocImgIdx(idx)}
-                        className={`relative h-14 sm:h-16 w-20 sm:w-24 shrink-0 overflow-hidden rounded-lg border-2 transition cursor-pointer ${
-                          trevocImgIdx === idx
+                        className={`relative h-14 sm:h-16 w-20 sm:w-24 shrink-0 overflow-hidden rounded-lg border-2 transition cursor-pointer ${trevocImgIdx === idx
                             ? 'border-bronze ring-2 ring-bronze/40 scale-105'
                             : 'border-transparent opacity-60 hover:opacity-100'
-                        }`}
+                          }`}
                       >
                         <img src={g.src} alt={g.title} loading="lazy" decoding="async" className="h-full w-full object-cover" />
                       </button>
@@ -810,7 +807,8 @@ export default function Projects() {
               </div>
 
               {/* Sub-Tabs for Deep Dive (Horizontal Touch Scroll on Mobile) */}
-              <div className="mb-6 flex items-center gap-1.5 sm:gap-2 overflow-x-auto no-scrollbar pb-2 -mx-3 px-3 sm:mx-0 sm:px-0 border-b border-ink/10">
+              {/* Sub-Tabs for Deep Dive (Screen-Fitted Wrap on Mobile - No Horizontal Scroll) */}
+              <div className="mb-6 flex flex-wrap items-center gap-1.5 sm:gap-2 pb-2 border-b border-ink/10 w-full">
                 {[
                   { id: 'overview', label: 'Residences & Config' },
                   { id: 'club-royal', label: 'Club Royal (50,000 Sq.Ft)' },
@@ -822,7 +820,7 @@ export default function Projects() {
                     key={tab.id}
                     type="button"
                     onClick={() => setTrevocSubTab(tab.id)}
-                    className={`shrink-0 rounded-full px-3.5 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider transition cursor-pointer whitespace-nowrap ${
+                    className={`rounded-full px-3 sm:px-4 py-1.5 text-[11px] sm:text-xs font-bold uppercase tracking-wider transition cursor-pointer ${
                       trevocSubTab === tab.id
                         ? 'bg-purple-900 text-white shadow-md'
                         : 'bg-white text-stone border border-ink/10 hover:border-bronze hover:text-ink'

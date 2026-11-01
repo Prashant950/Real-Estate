@@ -33,3 +33,9 @@
   .no-scrollbar::-webkit-scrollbar { display: none; }
   .no-scrollbar { -ms-overflow-style: none; scrollbar-width: none; }
 }
+
+/* Modal background scroll lock & touch isolation */
+body.modal-open-locked {
+  overflow: hidden !important;
+  overscroll-behavior: none !important;
+}
